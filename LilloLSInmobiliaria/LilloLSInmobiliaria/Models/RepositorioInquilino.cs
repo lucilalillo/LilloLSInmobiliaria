@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace LilloLSInmobiliaria.Models
 {
-    public class RepositorioInquilinos
+    public class RepositorioInquilino
     {
 		string connectionString = "Server = (localdb)\\MSSQLLocalDB;Database=LilloLSInmobiliaria;Trusted_Connection=True;MultipleActiveResultSets=true";
 
-        public RepositorioInquilinos()
+        public RepositorioInquilino()
         {
 
         }
@@ -22,8 +22,8 @@ namespace LilloLSInmobiliaria.Models
 			using (SqlConnection conn = new SqlConnection(connectionString))
 			{
 
-				string sql = $"INSERT INTO inquilinos (Nombre, Apellido, Dni, Telefono, Email, ClaveInq) " +
-					$"VALUES (@nombre, @apellido, @dni, @telefono, @email, @claveinq);" +
+				string sql = $"INSERT INTO inquilinos (Nombre, Apellido, Dni, Telefono, Mail, ClaveInq) " +
+					$"VALUES (@nombre, @apellido, @dni, @telefono, @mail, @claveinq);" +
 					$"SELECT SCOPE_IDENTITY();";
 
 				using (SqlCommand command = new SqlCommand(sql, conn))
@@ -33,7 +33,7 @@ namespace LilloLSInmobiliaria.Models
 					command.Parameters.AddWithValue("@apellido", i.Apellido);
 					command.Parameters.AddWithValue("@dni", i.Dni);
 					command.Parameters.AddWithValue("@telefono", i.Telefono);
-					command.Parameters.AddWithValue("@email", i.Email);
+					command.Parameters.AddWithValue("@mail", i.Mail);
 					command.Parameters.AddWithValue("@claveinq", i.ClaveInq);
 					conn.Open();
 					res = Convert.ToInt32(command.ExecuteScalar());
@@ -67,7 +67,7 @@ namespace LilloLSInmobiliaria.Models
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
 				string sql = $"UPDATE inquilinos SET " +
-					$"Nombre=@nombre, Apellido=@apellido, Dni=@dni, Telefono=@telefono, Email=@email, ClaveInq=@claveinq " +
+					$"Nombre=@nombre, Apellido=@apellido, Dni=@dni, Telefono=@telefono, Mail=@mail " +
 					$"WHERE Id = @id";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
@@ -76,9 +76,8 @@ namespace LilloLSInmobiliaria.Models
 					command.Parameters.AddWithValue("@apellido", i.Apellido);
 					command.Parameters.AddWithValue("@dni", i.Dni);
 					command.Parameters.AddWithValue("@telefono", i.Telefono);
-					command.Parameters.AddWithValue("@email", i.Email);
-					command.Parameters.AddWithValue("@claveprop", i.ClaveInq);
-					command.Parameters.AddWithValue("@idPropietarios", i.Id);
+					command.Parameters.AddWithValue("@mail", i.Mail);
+					command.Parameters.AddWithValue("@id", i.Id);
 					connection.Open();
 					res = command.ExecuteNonQuery();
 					connection.Close();
@@ -92,7 +91,7 @@ namespace LilloLSInmobiliaria.Models
 			IList<Inquilino> res = new List<Inquilino>();
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"SELECT Id, Nombre, Apellido, Dni, Telefono, Email" +
+				string sql = $"SELECT Id, Nombre, Apellido, Dni, Telefono, Mail" +
 					$" FROM inquilinos" +
 					$" ORDER BY Apellido, Nombre";/* +
 					$" OFFSET 0 ROWS " +
@@ -111,7 +110,7 @@ namespace LilloLSInmobiliaria.Models
 							Apellido = (string)reader[nameof(Inquilino.Apellido)],
 							Dni = (string)reader[nameof(Inquilino.Dni)],
 							Telefono = (string)reader[nameof(Inquilino.Telefono)],
-							Email = (string)reader[nameof(Inquilino.Email)],
+							Mail = (string)reader[nameof(Inquilino.Mail)],
 						};
 						res.Add(i);
 					}
@@ -126,7 +125,7 @@ namespace LilloLSInmobiliaria.Models
 			Inquilino i = null;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"SELECT Id, Nombre, Apellido, Dni, Telefono, Email FROM inquilinos" +
+				string sql = $"SELECT Id, Nombre, Apellido, Dni, Telefono, Mail FROM inquilinos" +
 					$" WHERE Id=@id";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
@@ -143,7 +142,7 @@ namespace LilloLSInmobiliaria.Models
 							Apellido = (string)reader[nameof(Inquilino.Apellido)],
 							Dni = (string)reader[nameof(Inquilino.Dni)],
 							Telefono = (string)reader[nameof(Inquilino.Telefono)],
-							Email = (string)reader[nameof(Inquilino.Email)],
+							Mail = (string)reader[nameof(Inquilino.Mail)],
 						};
 						return i;
 					}

@@ -20,8 +20,8 @@ namespace LilloLSInmobiliaria.Models
             int res = -1;
             using (SqlConnection conn = new SqlConnection(connectionString)) {
 
-				string sql = $"INSERT INTO propietarios (Nombre, Apellido, Dni, Telefono, Email, ClaveProp) " +
-					$"VALUES (@nombre, @apellido, @dni, @telefono, @email, @claveprop);" +
+				string sql = $"INSERT INTO propietarios (Nombre, Apellido, Dni, Telefono, Mail, ClaveProp) " +
+					$"VALUES (@nombre, @apellido, @dni, @telefono, @mail, @claveprop);" +
 					$"SELECT SCOPE_IDENTITY();";
 
 				using (SqlCommand command = new SqlCommand(sql, conn)) { 
@@ -30,7 +30,7 @@ namespace LilloLSInmobiliaria.Models
 					command.Parameters.AddWithValue("@apellido", p.Apellido);
 					command.Parameters.AddWithValue("@dni", p.Dni);
 					command.Parameters.AddWithValue("@telefono", p.Telefono);
-					command.Parameters.AddWithValue("@email", p.Email);
+					command.Parameters.AddWithValue("@mail", p.Mail);
 					command.Parameters.AddWithValue("@claveprop", p.ClaveProp);
 					conn.Open();
 					res = Convert.ToInt32(command.ExecuteScalar());
@@ -64,7 +64,7 @@ namespace LilloLSInmobiliaria.Models
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
 				string sql = $"UPDATE propietarios SET " +
-					$"Nombre=@nombre, Apellido=@apellido, Dni=@dni, Telefono=@telefono, Email=@email, ClaveProp=@claveprop " +
+					$"Nombre=@nombre, Apellido=@apellido, Dni=@dni, Telefono=@telefono, Mail=@mail " +
 					$"WHERE Id = @id";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
@@ -73,9 +73,8 @@ namespace LilloLSInmobiliaria.Models
 					command.Parameters.AddWithValue("@apellido", p.Apellido);
 					command.Parameters.AddWithValue("@dni", p.Dni);
 					command.Parameters.AddWithValue("@telefono", p.Telefono);
-					command.Parameters.AddWithValue("@email", p.Email);
-					command.Parameters.AddWithValue("@claveprop", p.ClaveProp);
-					command.Parameters.AddWithValue("@idPropietarios", p.Id);
+					command.Parameters.AddWithValue("@mail", p.Mail);
+					command.Parameters.AddWithValue("@id", p.Id);
 					connection.Open();
 					res = command.ExecuteNonQuery();
 					connection.Close();
@@ -89,7 +88,7 @@ namespace LilloLSInmobiliaria.Models
 			IList<Propietario> res = new List<Propietario>();
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"SELECT Id, Nombre, Apellido, Dni, Telefono, Email" +
+				string sql = $"SELECT Id, Nombre, Apellido, Dni, Telefono, Mail" +
 					$" FROM propietarios" +
 					$" ORDER BY Apellido, Nombre";/* +
 					$" OFFSET 0 ROWS " +
@@ -108,7 +107,7 @@ namespace LilloLSInmobiliaria.Models
 							Apellido = (string)reader[nameof(Propietario.Apellido)],
 							Dni = (string)reader[nameof(Propietario.Dni)],
 							Telefono = (string)reader[nameof(Propietario.Telefono)],
-							Email = (string)reader[nameof(Propietario.Email)],
+							Mail = (string)reader[nameof(Propietario.Mail)],
 						};
 						res.Add(p);
 					}
@@ -123,7 +122,7 @@ namespace LilloLSInmobiliaria.Models
 			Propietario p = null;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"SELECT Id, Nombre, Apellido, Dni, Telefono, Email FROM propietarios" +
+				string sql = $"SELECT Id, Nombre, Apellido, Dni, Telefono, Mail FROM propietarios" +
 					$" WHERE Id=@id";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
@@ -140,7 +139,7 @@ namespace LilloLSInmobiliaria.Models
 							Apellido = (string)reader[nameof(Propietario.Apellido)],
 							Dni = (string)reader[nameof(Propietario.Dni)],
 							Telefono = (string)reader[nameof(Propietario.Telefono)],
-							Email = (string)reader[nameof(Propietario.Email)],
+							Mail = (string)reader[nameof(Propietario.Mail)],
 						};
 						return p;
 					}

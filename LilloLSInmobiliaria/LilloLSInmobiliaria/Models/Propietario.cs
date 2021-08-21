@@ -25,14 +25,14 @@ namespace LilloLSInmobiliaria.Models
         public String Telefono { get; set; }
 
         [Required, EmailAddress]
-        public String Email { get; set; }
+        public String Mail { get; set; }
 
         [Required, DataType(DataType.Password)]
         public String ClaveProp { get; set; }
 
         public override string ToString()
         {
-            return $"{Id} {Nombre} {Apellido} {Dni} {Telefono} {Email}";
+            return $"{Id} {Nombre} {Apellido} {Dni} {Telefono} {Mail}";
         }
 
     }

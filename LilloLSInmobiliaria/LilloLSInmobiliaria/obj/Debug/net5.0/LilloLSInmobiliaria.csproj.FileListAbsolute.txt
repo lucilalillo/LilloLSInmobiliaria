@@ -130,3 +130,8 @@ C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloL
 C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Inquilinos\Create.cshtml.g.cs
 C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Inquilinos\Edit.cshtml.g.cs
 C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Inquilinos\Delete.cshtml.g.cs
+C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Inmuebles\Index.cshtml.g.cs
+C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Inmuebles\Details.cshtml.g.cs
+C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Inmuebles\Create.cshtml.g.cs
+C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Inmuebles\Edit.cshtml.g.cs
+C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Inmuebles\Delete.cshtml.g.cs

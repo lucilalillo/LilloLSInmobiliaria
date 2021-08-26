@@ -52,7 +52,7 @@ namespace LilloLSInmobiliaria.Models
             int res = -1;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"DELETE FROM Inmuebles WHERE Id = {id}";
+                string sql = $"DELETE FROM inmuebles WHERE Id = {id}";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;
@@ -69,8 +69,9 @@ namespace LilloLSInmobiliaria.Models
             int res = -1;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $"UPDATE Inmuebles SET " +
-                    $" PropietarioId=@propietarioid, Direccion=@direccion, CantAmbientes=@cantambientes, Uso=@uso, Tipo=@tipo, Precio=@precio, Estado=@estado " +
+                string sql = $"UPDATE inmuebles SET " +
+                    $" PropietarioId=@propietarioid, Direccion=@direccion, CantAmbientes=@cantambientes, " + 
+                    "Uso=@uso, Tipo=@tipo, Precio=@precio, Estado=@estado " +
                     $" WHERE Id = @id ";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
@@ -96,10 +97,10 @@ namespace LilloLSInmobiliaria.Models
             Inmueble p = null;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string sql = $" SELECT Id, Direccion, CantAmbientes, Uso, Tipo, Precio, Estado, PropietarioId, " +
+                string sql = $" SELECT i.Id, Direccion, CantAmbientes, Uso, Tipo, Precio, Estado, PropietarioId, " +
                     "p.Nombre, p.Apellido " +
                     " FROM Inmuebles i INNER JOIN Propietarios p ON i.PropietarioId = p.Id " +
-                    $" WHERE Id=@id";
+                    $" WHERE i.Id=@id";
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;
@@ -140,9 +141,11 @@ namespace LilloLSInmobiliaria.Models
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                String sql = $"SELECT Id, Direccion, CantAmbientes, Uso, Tipo, Precio, Estado, IdPropietario, " +
+                String sql = $"SELECT i.Id, Direccion, CantAmbientes, Uso, Tipo, Precio, Estado, PropietarioId, " +
                     " p.Nombre, p.Apellido " +
-                    " FROM Inmuebles i INNER JOIN propietarios p ON i.PropietarioId = p.Id ";
+                    " FROM inmuebles i INNER JOIN propietarios p ON i.PropietarioId = p.Id ";
+
+
                 using (SqlCommand command = new SqlCommand(sql, connection))
                 {
                     command.CommandType = CommandType.Text;

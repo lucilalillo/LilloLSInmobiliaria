@@ -4,6 +4,21 @@
     ViewData["Title"] = "Edit";
 }
 
+@{
+    if (TempData["Error"] != null)
+    {
+        <h1>@TempData["Error"]</h1>
+    }
+
+}
+@{
+    if (TempData["Mensaje"] != null)
+    {
+        <h1>@TempData["Mensaje"]</h1>
+    }
+
+}
+
 <h1>Editar</h1>
 
 <h4>Contrato</h4>

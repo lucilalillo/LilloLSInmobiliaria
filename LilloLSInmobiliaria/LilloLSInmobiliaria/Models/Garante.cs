@@ -1,16 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace LilloLSInmobiliaria.Models
 {
-    public class Propietario
+    public class Garante
     {
         [Key]
-        [Display(Name = "Codigo de Propietario")]
+        [Display(Name = "Codigo de Garante")]
         public int Id { get; set; }
+
+        public Contrato contrato { get; set; }
+
+        [ForeignKey(nameof(ContratoId))]
+        [Display(Name = "Contrato")]
+        public int ContratoId { get; set; }
 
         [Required]
         public String Nombre { get; set; }
@@ -27,13 +34,9 @@ namespace LilloLSInmobiliaria.Models
         [Required, EmailAddress]
         public String Mail { get; set; }
 
-        [Required, DataType(DataType.Password)]
-        public String ClaveProp { get; set; }
-
         public override string ToString()
         {
             return $"{Id} {Nombre} {Apellido} {Dni} {Telefono} {Mail}";
         }
-
     }
 }

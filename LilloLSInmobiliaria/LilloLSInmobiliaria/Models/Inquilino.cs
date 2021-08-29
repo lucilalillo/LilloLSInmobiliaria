@@ -9,7 +9,7 @@ namespace LilloLSInmobiliaria.Models
     public class Inquilino
     {
         [Key]
-        [Display(Name = "Codigo")]
+        [Display(Name = "Codigo de Inquilino")]
         public int Id { get; set; }
 
         [Required]
@@ -26,9 +26,6 @@ namespace LilloLSInmobiliaria.Models
 
         [Required, EmailAddress]
         public String Mail { get; set; }
-
-        [Required, DataType(DataType.Password)]
-        public String ClaveInq { get; set; }
 
         public override string ToString()
         {

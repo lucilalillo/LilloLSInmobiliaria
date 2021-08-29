@@ -8,35 +8,34 @@ using System.Threading.Tasks;
 
 namespace LilloLSInmobiliaria.Models
 {
-    public class RepositorioInquilino : RepositorioBase
+    public class RepositorioGarante : RepositorioBase
     {
+		public RepositorioGarante(IConfiguration config) : base(config)
+		{
 
-		public RepositorioInquilino(IConfiguration config): base(config)
-        {
+		}
 
-        }
-
-		public int Alta(Inquilino i)
+		public int Alta(Garante g)
 		{
 			int res = -1;
 			using (SqlConnection conn = new SqlConnection(connectionString))
 			{
 
-				string sql = $"INSERT INTO inquilinos (Nombre, Apellido, Dni, Telefono, Mail) " +
+				string sql = $"INSERT INTO garantes (Nombre, Apellido, Dni, Telefono, Mail) " +
 					$"VALUES (@nombre, @apellido, @dni, @telefono, @mail);" +
 					$"SELECT SCOPE_IDENTITY();";
 
 				using (SqlCommand command = new SqlCommand(sql, conn))
 				{
 
-					command.Parameters.AddWithValue("@nombre", i.Nombre);
-					command.Parameters.AddWithValue("@apellido", i.Apellido);
-					command.Parameters.AddWithValue("@dni", i.Dni);
-					command.Parameters.AddWithValue("@telefono", i.Telefono);
-					command.Parameters.AddWithValue("@mail", i.Mail);
+					command.Parameters.AddWithValue("@nombre", g.Nombre);
+					command.Parameters.AddWithValue("@apellido", g.Apellido);
+					command.Parameters.AddWithValue("@dni", g.Dni);
+					command.Parameters.AddWithValue("@telefono", g.Telefono);
+					command.Parameters.AddWithValue("@mail", g.Mail);
 					conn.Open();
 					res = Convert.ToInt32(command.ExecuteScalar());
-					i.Id = res;
+					g.Id = res;
 					conn.Close();
 				}
 			}
@@ -48,7 +47,7 @@ namespace LilloLSInmobiliaria.Models
 			int res = -1;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"DELETE FROM inquilinos WHERE Id = {id}";
+				string sql = $"DELETE FROM garantes WHERE Id = {id}";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
 					command.CommandType = CommandType.Text;
@@ -60,23 +59,23 @@ namespace LilloLSInmobiliaria.Models
 			return res;
 		}
 
-		public int Modificacion(Inquilino i)
+		public int Modificacion(Garante g)
 		{
 			int res = -1;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"UPDATE inquilinos SET " +
+				string sql = $"UPDATE garantes SET " +
 					$"Nombre=@nombre, Apellido=@apellido, Dni=@dni, Telefono=@telefono, Mail=@mail " +
 					$"WHERE Id = @id";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
 					command.CommandType = CommandType.Text;
-					command.Parameters.AddWithValue("@nombre", i.Nombre);
-					command.Parameters.AddWithValue("@apellido", i.Apellido);
-					command.Parameters.AddWithValue("@dni", i.Dni);
-					command.Parameters.AddWithValue("@telefono", i.Telefono);
-					command.Parameters.AddWithValue("@mail", i.Mail);
-					command.Parameters.AddWithValue("@id", i.Id);
+					command.Parameters.AddWithValue("@nombre", g.Nombre);
+					command.Parameters.AddWithValue("@apellido", g.Apellido);
+					command.Parameters.AddWithValue("@dni", g.Dni);
+					command.Parameters.AddWithValue("@telefono", g.Telefono);
+					command.Parameters.AddWithValue("@mail", g.Mail);
+					command.Parameters.AddWithValue("@id", g.Id);
 					connection.Open();
 					res = command.ExecuteNonQuery();
 					connection.Close();
@@ -85,13 +84,13 @@ namespace LilloLSInmobiliaria.Models
 			return res;
 		}
 
-		public IList<Inquilino> ObtenerTodos()
+		public IList<Garante> ObtenerTodos()
 		{
-			IList<Inquilino> res = new List<Inquilino>();
+			IList<Garante> res = new List<Garante>();
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
 				string sql = $"SELECT Id, Nombre, Apellido, Dni, Telefono, Mail" +
-					$" FROM inquilinos" +
+					$" FROM garantes" +
 					$" ORDER BY Apellido, Nombre";/* +
 					$" OFFSET 0 ROWS " +
 					$" FETCH NEXT 10 ROWS ONLY ";*/
@@ -102,16 +101,16 @@ namespace LilloLSInmobiliaria.Models
 					var reader = command.ExecuteReader();
 					while (reader.Read())
 					{
-						Inquilino i = new Inquilino
+						Garante g = new Garante
 						{
 							Id = reader.GetInt32(0),
-							Nombre = (string)reader[nameof(Inquilino.Nombre)],
-							Apellido = (string)reader[nameof(Inquilino.Apellido)],
-							Dni = (string)reader[nameof(Inquilino.Dni)],
-							Telefono = (string)reader[nameof(Inquilino.Telefono)],
-							Mail = (string)reader[nameof(Inquilino.Mail)],
+							Nombre = (string)reader[nameof(Garante.Nombre)],
+							Apellido = (string)reader[nameof(Garante.Apellido)],
+							Dni = (string)reader[nameof(Garante.Dni)],
+							Telefono = (string)reader[nameof(Garante.Telefono)],
+							Mail = (string)reader[nameof(Garante.Mail)],
 						};
-						res.Add(i);
+						res.Add(g);
 					}
 					connection.Close();
 				}
@@ -119,12 +118,12 @@ namespace LilloLSInmobiliaria.Models
 			return res;
 		}
 
-		public Inquilino ObtenerPorId(int id)
+		public Garante ObtenerPorId(int id)
 		{
-			Inquilino i = null;
+			Garante g = null;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"SELECT Id, Nombre, Apellido, Dni, Telefono, Mail FROM inquilinos" +
+				string sql = $"SELECT Id, Nombre, Apellido, Dni, Telefono, Mail FROM garantes" +
 					$" WHERE Id=@id";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
@@ -134,21 +133,21 @@ namespace LilloLSInmobiliaria.Models
 					var reader = command.ExecuteReader();
 					while (reader.Read())
 					{
-						i = new Inquilino
+						g = new Garante
 						{
 							Id = reader.GetInt32(0),
-							Nombre = (string)reader[nameof(Inquilino.Nombre)],
-							Apellido = (string)reader[nameof(Inquilino.Apellido)],
-							Dni = (string)reader[nameof(Inquilino.Dni)],
-							Telefono = (string)reader[nameof(Inquilino.Telefono)],
-							Mail = (string)reader[nameof(Inquilino.Mail)],
+							Nombre = (string)reader[nameof(Garante.Nombre)],
+							Apellido = (string)reader[nameof(Garante.Apellido)],
+							Dni = (string)reader[nameof(Garante.Dni)],
+							Telefono = (string)reader[nameof(Garante.Telefono)],
+							Mail = (string)reader[nameof(Garante.Mail)],
 						};
-						return i;
+						return g;
 					}
 					connection.Close();
 				}
 			}
-			return i;
+			return g;
 		}
 	}
 }

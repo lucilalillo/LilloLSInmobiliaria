@@ -9,18 +9,19 @@ using System.Threading.Tasks;
 
 namespace LilloLSInmobiliaria.Controllers
 {
-    public class InquilinosController : Controller
+    public class GarantesController : Controller
     {
-        RepositorioInquilino repo;
+        RepositorioGarante repo;
         protected readonly IConfiguration config;
 
-        public InquilinosController(IConfiguration config)
+        public GarantesController(IConfiguration config)
         {
             this.config = config;
-            repo = new RepositorioInquilino(config);
+            repo = new RepositorioGarante(config);
         }
 
-        // GET: InquilinosController
+
+        // GET: GarantesController
         public ActionResult Index()
         {
             try
@@ -37,28 +38,28 @@ namespace LilloLSInmobiliaria.Controllers
             }
         }
 
-        // GET: InquilinosController/Details/5
+        // GET: GarantesController/Details/5
         public ActionResult Details(int id)
         {
-            Inquilino i = new Inquilino();
-            i = repo.ObtenerPorId(id);
-            return View(i);
+            Garante g = new Garante();
+            g = repo.ObtenerPorId(id);
+            return View(g);
         }
 
-        // GET: InquilinosController/Create
+        // GET: GarantesController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: InquilinosController/Create
+        // POST: GarantesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Inquilino i)
+        public ActionResult Create(Garante g)
         {
             try
             {
-                repo.Alta(i);
+                repo.Alta(g);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -67,7 +68,7 @@ namespace LilloLSInmobiliaria.Controllers
             }
         }
 
-        // GET: InquilinosController/Edit/5
+        // GET: GarantesController/Edit/5
         public ActionResult Edit(int id)
         {
             var i = repo.ObtenerPorId(id);
@@ -78,12 +79,12 @@ namespace LilloLSInmobiliaria.Controllers
             return View(i);
         }
 
-        // POST: InquilinosController/Edit/5
+        // POST: GarantesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
         {
-            Inquilino i = null;
+            Garante i = null;
             try
             {
                 i = repo.ObtenerPorId(id);
@@ -104,7 +105,7 @@ namespace LilloLSInmobiliaria.Controllers
             }
         }
 
-        // GET: InquilinosController/Delete/5
+        // GET: GarantesController/Delete/5
         public ActionResult Delete(int id)
         {
             var i = repo.ObtenerPorId(id);
@@ -113,12 +114,13 @@ namespace LilloLSInmobiliaria.Controllers
             if (TempData.ContainsKey("Error"))
                 ViewBag.Error = TempData["Error"];
             return View(i);
+
         }
 
-        // POST: InquilinosController/Delete/5
+        // POST: GarantesController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, Inquilino i)
+        public ActionResult Delete(int id, Garante i)
         {
             try
             {
@@ -132,7 +134,6 @@ namespace LilloLSInmobiliaria.Controllers
                 ViewBag.StackTrate = ex.StackTrace;
                 return View(i);
             }
-
         }
     }
 }

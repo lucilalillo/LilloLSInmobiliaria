@@ -13,8 +13,8 @@ namespace LilloLSInmobiliaria.Models
 
         protected RepositorioBase(IConfiguration configuration)
         {
-            this.connectionString = "Server = (localdb)\\MSSQLLocalDB;Database=LilloLSInmobiliaria;Trusted_Connection=True;MultipleActiveResultSets=true";
             this.configuration = configuration;
+            this.connectionString = configuration["ConnectionStrings:DefaultConnection"];
         }
     }
 }

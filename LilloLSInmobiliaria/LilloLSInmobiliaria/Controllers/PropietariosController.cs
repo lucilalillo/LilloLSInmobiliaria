@@ -1,6 +1,7 @@
 ﻿using LilloLSInmobiliaria.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +12,12 @@ namespace LilloLSInmobiliaria.Controllers
     public class PropietariosController : Controller
     {
         RepositorioPropietario repo;
+        protected readonly IConfiguration config;
 
-        public PropietariosController()
+        public PropietariosController(IConfiguration config)
         {
-            repo = new RepositorioPropietario();
+            this.config = config;
+            repo = new RepositorioPropietario(config);
         }
 
         // GET: PropietariosController

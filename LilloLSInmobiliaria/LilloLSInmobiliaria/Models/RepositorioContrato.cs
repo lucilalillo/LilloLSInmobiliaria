@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -7,11 +8,9 @@ using System.Threading.Tasks;
 
 namespace LilloLSInmobiliaria.Models
 {
-    public class RepositorioContrato
-    {
-        string connectionString = "Server = (localdb)\\MSSQLLocalDB;Database=LilloLSInmobiliaria;Trusted_Connection=True;MultipleActiveResultSets=true";
-
-        public RepositorioContrato()
+    public class RepositorioContrato : RepositorioBase
+    {        
+		public RepositorioContrato(IConfiguration config): base(config)
         {
 
         }
@@ -21,8 +20,8 @@ namespace LilloLSInmobiliaria.Models
 			int res = -1;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"INSERT INTO contratos (InmuebleId, InquilinoId, FecInicio, FecFin, Monto, Estado) " +
-					$"VALUES (@idInmueble, @idInquilino, @fechaInicio, @fechaFin, @monto, @estado);" +
+				string sql = $"INSERT INTO contratos (InmuebleId, InquilinoId, FecInicio, FecFin, Monto, Estado, GaranteId) " +
+					$"VALUES (@idInmueble, @idInquilino, @fechaInicio, @fechaFin, @monto, @estado, @idgarante);" +
 					$"SELECT SCOPE_IDENTITY();";//devuelve el id insertado
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
@@ -33,6 +32,7 @@ namespace LilloLSInmobiliaria.Models
 					command.Parameters.AddWithValue("@fechaFin", c.FecFin);
 					command.Parameters.AddWithValue("@monto", c.Monto);
 					command.Parameters.AddWithValue("@estado", c.Estado);
+					command.Parameters.AddWithValue("@idgarante",c.GaranteId);
 					connection.Open();
 					res = Convert.ToInt32(command.ExecuteScalar());
 					c.Id = res;
@@ -59,12 +59,13 @@ namespace LilloLSInmobiliaria.Models
 			}
 			return res;
 		}
+
 		public int Modificacion(Contrato c)
 		{
 			int res = -1;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"UPDATE contratos SET InmuebleId=@idInmueble, InquilinoId=@idInquilino, FecInicio=@fechaInicio, FecFin=@fechaFin, Monto=@monto, Estado=@estado " +
+				string sql = $"UPDATE contratos SET InmuebleId=@idInmueble, InquilinoId=@idInquilino, FecInicio=@fechaInicio, FecFin=@fechaFin, Monto=@monto, Estado=@estado, GaranteId=@idgarante " +
 					$" WHERE Id = @id";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
@@ -75,6 +76,7 @@ namespace LilloLSInmobiliaria.Models
 					command.Parameters.AddWithValue("@fechaFin", c.FecFin);
 					command.Parameters.AddWithValue("@monto", c.Monto);
 					command.Parameters.AddWithValue("@estado", c.Estado);
+					command.Parameters.AddWithValue("@idgarante",c.GaranteId);
 					command.Parameters.AddWithValue("@id", c.Id);
 					connection.Open();
 					res = command.ExecuteNonQuery();
@@ -90,9 +92,10 @@ namespace LilloLSInmobiliaria.Models
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
 				string sql = $"SELECT c.Id, InmuebleId, InquilinoId, FecInicio, FecFin, Monto, " +
-					" c.Estado, inq.Nombre, inq.Apellido , i.Direccion " +
+					" c.Estado, c.GaranteId, inq.Nombre, inq.Apellido , i.Direccion, g.Nombre, g.Apellido " +
 					$" FROM contratos c INNER JOIN inmuebles i ON c.InmuebleId = i.Id " +
-					$" INNER JOIN inquilinos inq ON c.InquilinoId = inq.Id ";
+					$" INNER JOIN inquilinos inq ON c.InquilinoId = inq.Id " +
+					$"INNER JOIN garantes g ON c.GaranteId = g.Id";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
 					command.CommandType = CommandType.Text;
@@ -109,16 +112,23 @@ namespace LilloLSInmobiliaria.Models
 							FecFin = reader.GetDateTime(4),
 							Monto = reader.GetDecimal(5),
 							Estado = reader.GetBoolean(6),
+							GaranteId = reader.GetInt32(7),
 							Inquilino = new Inquilino
 							{
 								Id = reader.GetInt32(2),
-								Nombre = reader.GetString(7),
-								Apellido = reader.GetString(8),
+								Nombre = reader.GetString(8),
+								Apellido = reader.GetString(9),
 							},
 							Inmueble = new Inmueble
 							{
 								Id = reader.GetInt32(1),
-								Direccion = reader.GetString(9),
+								Direccion = reader.GetString(10),
+							},
+							Garante = new Garante
+							{ 
+								Id = reader.GetInt32(7),
+								Nombre = reader.GetString(11),
+								Apellido = reader.GetString(12),
 							}
 						};
 						res.Add(c);
@@ -136,7 +146,7 @@ namespace LilloLSInmobiliaria.Models
 			Contrato c = null;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"SELECT Id, InmuebleId, InquilinoId, FecInicio, FecFin, Monto, Estado FROM contratos " +
+				string sql = $"SELECT Id, InmuebleId, InquilinoId, FecInicio, FecFin, Monto, Estado, GaranteId FROM contratos " +
 					$" WHERE Id=@id";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
@@ -155,6 +165,7 @@ namespace LilloLSInmobiliaria.Models
 							FecFin = reader.GetDateTime(4),
 							Monto = reader.GetDecimal(5),
 							Estado = reader.GetBoolean(6),
+							GaranteId = reader.GetInt32(7),
 						};
 					}
 					connection.Close();
@@ -168,11 +179,12 @@ namespace LilloLSInmobiliaria.Models
 			IList<Contrato> res = new List<Contrato>();
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"SELECT c.Id, InmuebleId, InquilinoId, FecInicio, FecFin, Monto, Estado, " +
-					$"i.Direccion, inq.Nombre, inq.Apellido " +
+				string sql = $"SELECT c.Id, InmuebleId, InquilinoId, FecInicio, FecFin, Monto, c.Estado, c.GaranteId " +
+					$"i.Direccion, inq.Nombre, inq.Apellido, g.Nombre, g.Apellido " +
 					$" FROM contratos c INNER JOIN inmuebles i ON c.InmuebleId = i.Id " +
 					$"INNER JOIN Inquilinos inq ON c.InquilinoId = inq.Id " +
-					$"WHERE i.InmuebleId = @idInmueble";
+					$"INNER JOIN garantes g ON c.GaranteId = g.Id" +
+					$"WHERE i.Id = @idInmueble";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
 					command.Parameters.Add("@idInmueble", SqlDbType.Int).Value = id;
@@ -190,22 +202,22 @@ namespace LilloLSInmobiliaria.Models
 							FecFin = reader.GetDateTime(4),
 							Monto = reader.GetDecimal(5),
 							Estado = reader.GetBoolean(6),
+							GaranteId = reader.GetInt32(7),
 							Inmueble = new Inmueble
 							{
 								Id = reader.GetInt32(1),
-								Direccion = reader.GetString(7),
-
-
-
+								Direccion = reader.GetString(8),
 							},
 							Inquilino = new Inquilino
 							{
 								Id = reader.GetInt32(2),
-								Nombre = reader.GetString(8),
-								Apellido = reader.GetString(9),
-
-
-
+								Nombre = reader.GetString(9),
+								Apellido = reader.GetString(10),
+							},
+							Garante = new Garante {
+								Id = reader.GetInt32(7),
+								Nombre = reader.GetString(11),
+								Apellido = reader.GetString(12),
 							}
 						};
 						res.Add(c);

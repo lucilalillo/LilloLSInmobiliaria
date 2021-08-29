@@ -1,6 +1,7 @@
 ﻿using LilloLSInmobiliaria.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +13,13 @@ namespace LilloLSInmobiliaria.Controllers
     {
          RepositorioInmueble repo;
          RepositorioPropietario repoProp;
+        protected readonly IConfiguration config;
 
-        public InmueblesController()
+        public InmueblesController(IConfiguration config)
         {
-            repo = new RepositorioInmueble();
-            repoProp = new RepositorioPropietario();
+            this.config = config;
+            repo = new RepositorioInmueble(config);
+            repoProp = new RepositorioPropietario(config);
         }
 
         // GET: InmueblesController
@@ -124,7 +127,7 @@ namespace LilloLSInmobiliaria.Controllers
                 {
                     Inmueble p = repo.ObtenerPorId(id);
                     ViewBag.lugar = p.Prop.Nombre + " " + p.Prop.Apellido + " en " + p.Direccion;
-                    ViewBag.Error = "No se puede eliminar el inmueble porque tiene contratos vigentes";
+                    TempData["Error"] = "No se puede eliminar el inmueble porque tiene contratos vigentes";
                 }
                 else
                 {

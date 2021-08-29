@@ -8,12 +8,9 @@ using System.Threading.Tasks;
 
 namespace LilloLSInmobiliaria.Models
 {
-    public class RepositorioInmueble {
+    public class RepositorioInmueble : RepositorioBase {
 
-        string connectionString = "Server = (localdb)\\MSSQLLocalDB;Database=LilloLSInmobiliaria;Trusted_Connection=True;MultipleActiveResultSets=true";
-
-
-        public RepositorioInmueble()
+        public RepositorioInmueble(IConfiguration config): base(config)
         {
 
         }

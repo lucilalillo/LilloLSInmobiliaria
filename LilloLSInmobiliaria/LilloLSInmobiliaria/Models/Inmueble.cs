@@ -10,7 +10,7 @@ namespace LilloLSInmobiliaria.Models
     public class Inmueble
     {
         [Key]
-        [Display(Name = "Codigo")]
+        [Display(Name = "Codigo de Inmueble")]
         public int Id { get; set; }
 
         public Propietario Prop { get; set; }

@@ -1,6 +1,7 @@
 ﻿using LilloLSInmobiliaria.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +14,16 @@ namespace LilloLSInmobiliaria.Controllers
         RepositorioContrato repo;
         RepositorioInmueble repoInmueble;
         RepositorioInquilino repoInq;
+        RepositorioGarante repoGar;
+        protected readonly IConfiguration config;
 
-        public ContratosController()
+        public ContratosController(IConfiguration config)
         {
-            repo = new RepositorioContrato();
-            repoInmueble = new RepositorioInmueble();
-            repoInq = new RepositorioInquilino();
+            this.config = config;
+            repo = new RepositorioContrato(config);
+            repoInmueble = new RepositorioInmueble(config);
+            repoInq = new RepositorioInquilino(config);
+            repoGar = new RepositorioGarante(config);
         }
 
 
@@ -49,6 +54,7 @@ namespace LilloLSInmobiliaria.Controllers
         {
             ViewBag.Inmueble = repoInmueble.ObtenerTodos();
             ViewBag.Inquilino = repoInq.ObtenerTodos();
+            ViewBag.Garantes = repoGar.ObtenerTodos();
             return View();
 
         }
@@ -79,7 +85,7 @@ namespace LilloLSInmobiliaria.Controllers
                             }
                             else if (fechIni < item.FecInicio && fechFin > item.FecInicio)
                             {
-                                ViewBag.Error = "La fecha de fin de contrato solicitada, debe ser menor a " + item.FecInicio;
+                                TempData["Error"] = "La fecha de fin de contrato solicitada, debe ser menor a " + item.FecInicio;
                             }
                             else if (fechIni > item.FecFin && fechFin > item.FecFin)
                             {
@@ -87,11 +93,11 @@ namespace LilloLSInmobiliaria.Controllers
                             }
                             else if (fechIni > item.FecFin && fechFin < item.FecFin)
                             {
-                                ViewBag.Error = "La fecha de fin de contrato solicitada, deber ser mayor a " + item.FecFin;
+                                TempData["Error"] = "La fecha de fin de contrato solicitada, deber ser mayor a " + item.FecFin;
                             }
                             else
                             {
-                                ViewBag.Error = "La fecha de inicio de contrato solicitada, no deberia estar entre " + item.FecInicio + "  -  " + item.FecFin;
+                                TempData["Error"] = "La fecha de inicio de contrato solicitada, no deberia estar entre " + item.FecInicio + "  -  " + item.FecFin;
                             }
                         }
                     }
@@ -106,6 +112,7 @@ namespace LilloLSInmobiliaria.Controllers
                     {
                         ViewBag.Inmueble = repoInmueble.ObtenerTodos();
                         ViewBag.Inquilino = repoInq.ObtenerTodos();
+                        ViewBag.Garantes = repoGar.ObtenerTodos();
                         return View(c);
                     }
                 }

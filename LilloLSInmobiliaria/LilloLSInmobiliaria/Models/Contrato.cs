@@ -10,13 +10,18 @@ namespace LilloLSInmobiliaria.Models
     public class Contrato
     {
         [Key]
-        [DisplayName("Codigo")]
+        [DisplayName("Codigo de Contrato")]
         public int Id { get; set; }
 
         public Inmueble Inmueble { get; set; }
 
         [Required, DisplayName("Dueño")]
         public int InmuebleId { get; set; }
+
+        public Garante Garante { get; set; }
+
+        [Required, DisplayName("Garante")]
+        public int GaranteId { get; set; }
 
         public Inquilino Inquilino { get; set; }
 

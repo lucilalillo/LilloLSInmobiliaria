@@ -69,65 +69,30 @@ namespace LilloLSInmobiliaria.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var contratos = repo.ObtenerPorInmuebleId(c.InmuebleId);
-                    var fechFin = c.FecFin;
-                    var fechIni = c.FecInicio;
-                    var count = contratos.Count;
-
-                    IList<Contrato> ctosNuevos = new List<Contrato>();
-                    foreach (var item in contratos)
+                    if (c.FecInicio < DateTime.Today)
                     {
-                        if (item.Estado)
-                        {
-                            if (fechIni < item.FecInicio && fechFin < item.FecInicio)
-                            {
-                                ctosNuevos.Add(item);
-                            }
-                            else if (fechIni < item.FecInicio && fechFin > item.FecInicio)
-                            {
-                                TempData["Error"] = "La fecha de fin de contrato solicitada, debe ser menor a " + item.FecInicio;
-                            }
-                            else if (fechIni > item.FecFin && fechFin > item.FecFin)
-                            {
-                                ctosNuevos.Add(item);
-                            }
-                            else if (fechIni > item.FecFin && fechFin < item.FecFin)
-                            {
-                                TempData["Error"] = "La fecha de fin de contrato solicitada, deber ser mayor a " + item.FecFin;
-                            }
-                            else
-                            {
-                                TempData["Error"] = "La fecha de inicio de contrato solicitada, no deberia estar entre " + item.FecInicio + "  -  " + item.FecFin;
-                            }
-                        }
+                        TempData["Error"] = "La fecha de inicio del contrato no puede ser menor a la fecha actual";
                     }
-                    if (count == ctosNuevos.Count)
+                    if (c.FecFin < DateTime.Today)
                     {
-                        c.Estado = true;
-                        res = repo.Alta(c);
-                        TempData["Id"] = c.Id;
-                        return RedirectToAction(nameof(Index));
+                        TempData["Error"] = "La fecha de finalizacion del contrato no puede ser menor a la fecha actual";
                     }
-                    else
+                    if (c.FecFin < c.FecInicio)
                     {
-                        ViewBag.Inmueble = repoInmueble.ObtenerTodos();
-                        ViewBag.Inquilino = repoInq.ObtenerTodos();
-                        ViewBag.Garantes = repoGar.ObtenerTodos();
-                        return View(c);
+                        TempData["Error"] = "La fecha de finalizacion del contrato no puede ser menor a la fecha de inicio";
                     }
+                    repo.Alta(c);
+                    TempData["Mensaje"] = "Contrato guardado satisfactoriamente";
+                    return RedirectToAction(nameof(Index));
                 }
-                else
-                    return View(c);
+                else return View(c);
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 ViewBag.Error = ex.Message;
                 ViewBag.StackTrate = ex.StackTrace;
-                return View(c);
-            }
-
-
-        }
+                return View();
+             }
+ }
 
         // GET: ContratosController/Edit/5
         public ActionResult Edit(int id)
@@ -149,9 +114,18 @@ namespace LilloLSInmobiliaria.Controllers
     [ValidateAntiForgeryToken]
     public ActionResult Edit(int id, Contrato c)
     {
+            Contrato con = null;
             try
             {
-                repo.Modificacion(c);
+                con = repo.ObtenerPorId(id);
+                con.InmuebleId = c.InmuebleId;
+                con.InquilinoId = c.InquilinoId;
+                con.FecInicio = c.FecInicio;
+                con.FecFin = c.FecFin;
+                con.Monto = c.Monto;
+                con.Estado = c.Estado;
+                con.GaranteId = c.GaranteId;
+                repo.Modificacion(con);
                 TempData["Mensaje"] = "Datos guardados correctamente";
                 return RedirectToAction(nameof(Index));
             }
@@ -159,7 +133,7 @@ namespace LilloLSInmobiliaria.Controllers
             {
                 ViewBag.Error = ex.Message;
                 ViewBag.StackTrate = ex.StackTrace;
-                return View(c);
+                return View(con);
             }
 
         }

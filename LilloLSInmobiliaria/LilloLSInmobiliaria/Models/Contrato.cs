@@ -15,7 +15,7 @@ namespace LilloLSInmobiliaria.Models
 
         public Inmueble Inmueble { get; set; }
 
-        [Required, DisplayName("Dueño")]
+        [Required, DisplayName("Codigo de Inmueble")]
         public int InmuebleId { get; set; }
 
         public Garante Garante { get; set; }
@@ -31,7 +31,7 @@ namespace LilloLSInmobiliaria.Models
         [Required, DisplayName("Fecha Inicio Contrato")]
         public DateTime FecInicio { get; set; }
 
-        [Required, DisplayName("Fecha Fin contrato")]
+        [Required, DisplayName("Fecha Fin Contrato")]
         public DateTime FecFin { get; set; }
 
         public decimal Monto { get; set; }

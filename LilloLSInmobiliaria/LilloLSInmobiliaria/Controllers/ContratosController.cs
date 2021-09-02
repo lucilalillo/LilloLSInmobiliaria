@@ -99,6 +99,7 @@ namespace LilloLSInmobiliaria.Controllers
         {
             ViewBag.Inquilino = repoInq.ObtenerTodos();
             ViewBag.Inmueble = repoInmueble.ObtenerTodos();
+            ViewBag.Garantes = repoGar.ObtenerTodos();
             if (TempData.ContainsKey("Mensaje"))
                 ViewBag.Mensaje = TempData["Mensaje"];
             if (TempData.ContainsKey("Error"))
@@ -141,7 +142,8 @@ namespace LilloLSInmobiliaria.Controllers
         // GET: ContratosController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var c = repo.ObtenerPorId(id);
+            return View(c);
         }
 
         // POST: ContratosController/Delete/5

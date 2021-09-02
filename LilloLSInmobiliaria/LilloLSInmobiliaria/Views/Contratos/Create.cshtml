@@ -6,14 +6,14 @@
 @{
     if (TempData["Error"] != null)
     {
-        <h1>@TempData["Error"]</h1>
+        <p>@TempData["Error"]</p>
     }
 
 }
 @{
     if (TempData["Mensaje"] != null)
     {
-        <h1>@TempData["Mensaje"]</h1>
+        <p>@TempData["Mensaje"]</p>
     }
 
 }
@@ -28,13 +28,21 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="InmuebleId" class="control-label"></label>
-                <input asp-for="InmuebleId" class="form-control" />
-                <span asp-validation-for="InmuebleId" class="text-danger"></span>
+                <select class="form-control" name="InmuebleId">
+                    @foreach (var item in (IList<Inmueble>)ViewBag.Inmueble)
+                    {
+                        <option value="@item.Id"> @(item.Id)</option>
+                    }
+                </select>
             </div>
             <div class="form-group">
                 <label asp-for="InquilinoId" class="control-label"></label>
-                <input asp-for="InquilinoId" class="form-control" />
-                <span asp-validation-for="InquilinoId" class="text-danger"></span>
+                <select class="form-control" name="InquilinoId">
+                    @foreach (var item in (IList<Inquilino>)ViewBag.Inquilino)
+                    {
+                        <option value="@item.Id"> @(item.Nombre + " " + item.Apellido)</option>
+}
+                </select>
             </div>
             <div class="form-group">
                 <label asp-for="FecInicio" class="control-label"></label>
@@ -56,16 +64,21 @@
                 <input asp-for="Estado" class="form-control" />
                 <span asp-validation-for="Estado" class="text-danger"></span>
             </div>
+            
             <div class="form-group">
-                <label asp-for="GaranteId" class="control-label"></label>
-                <input asp-for="GaranteId" class="form-control" />
-                <span asp-validation-for="GaranteId" class="text-danger"></span>
+            <label asp-for="GaranteId" class="control-label"></label>
+            <select class="form-control" name="GaranteId">
+                @foreach (var item in (IList<Garante>)ViewBag.Garantes)
+                {
+                    <option value="@item.Id"> @(item.Nombre + " " + item.Apellido)</option>}
+            </select>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Crear" class="btn btn-primary" />
-            </div>
-        </form>
+
+    <div class="form-group">
+        <input type="submit" value="Crear" class="btn btn-primary" />
     </div>
+    </form>
+</div>
 </div>
 
 <div>

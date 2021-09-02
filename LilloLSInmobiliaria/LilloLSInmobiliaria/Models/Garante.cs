@@ -15,10 +15,6 @@ namespace LilloLSInmobiliaria.Models
 
         public Contrato contrato { get; set; }
 
-        [ForeignKey(nameof(ContratoId))]
-        [Display(Name = "Contrato")]
-        public int ContratoId { get; set; }
-
         [Required]
         public String Nombre { get; set; }
 

@@ -6,14 +6,14 @@
 @{
     if (TempData["Error"] != null)
     {
-        <h1>@TempData["Error"]</h1>
+        <p>@TempData["Error"]</p>
     }
 
 }
 @{
     if (TempData["Mensaje"] != null)
     {
-        <h1>@TempData["Mensaje"]</h1>
+        <p>@TempData["Mensaje"]</p>
     }
 
 }
@@ -60,6 +60,12 @@
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Estado)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.GaranteId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.GaranteId)
         </dd>
     </dl>
 

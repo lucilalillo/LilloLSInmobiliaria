@@ -7,14 +7,14 @@
 @{
     if (TempData["Error"] != null)
     {
-        <h1>@TempData["Error"]</h1>
+        <p>@TempData["Error"]</p>
     }
 
 }
 @{
     if (TempData["Mensaje"] != null)
     {
-        <h1>@TempData["Mensaje"]</h1>
+        <p>@TempData["Mensaje"]</p>
     }
 
 }
@@ -45,37 +45,43 @@
             <th>
                 @Html.DisplayNameFor(model => model.Estado)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GaranteId)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.InmuebleId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.InquilinoId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FecInicio)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FecFin)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Monto)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Estado)
-                </td>
-                <td>
-                    @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
-                    @Html.ActionLink("Detalles", "Details", new { id = item.Id }) |
-                    @Html.ActionLink("Eliminar", "Delete", new { id = item.Id })
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.InmuebleId)
+            </td>
+            <td>
+                @(item.Inquilino.Nombre+" "+item.Inquilino.Apellido)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FecInicio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FecFin)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Monto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Estado)
+            </td>
+            <td>
+                @(item.Garante.Nombre+" "+item.Garante.Apellido)
+            </td>
+            <td>
+                @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Detalles", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Eliminar", "Delete", new { id = item.Id })
+            </td>
+        </tr>
         }
     </tbody>
 </table>

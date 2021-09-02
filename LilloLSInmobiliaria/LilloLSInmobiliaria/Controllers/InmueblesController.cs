@@ -48,6 +48,7 @@ namespace LilloLSInmobiliaria.Controllers
     // GET: InmueblesController/Create
     public ActionResult Create()
         {
+            ViewBag.Propietarios = repoProp.ObtenerTodos();
             return View();
         }
 
@@ -73,6 +74,7 @@ namespace LilloLSInmobiliaria.Controllers
         // GET: InmueblesController/Edit/5
         public ActionResult Edit(int id)
         {
+            ViewBag.Propietarios = repoProp.ObtenerTodos();
             var i = repo.ObtenerPorId(id);
             if (TempData.ContainsKey("Mensaje"))
                 ViewBag.Mensaje = TempData["Mensaje"];

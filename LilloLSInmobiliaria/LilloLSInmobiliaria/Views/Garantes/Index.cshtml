@@ -6,14 +6,14 @@
 @{
     if (TempData["Error"] != null)
     {
-        <h1>@TempData["Error"]</h1>
+        <p>@TempData["Error"]</p>
     }
 
 }
 @{
     if (TempData["Mensaje"] != null)
     {
-        <h1>@TempData["Mensaje"]</h1>
+        <p>@TempData["Mensaje"]</p>
     }
 
 }
@@ -26,9 +26,6 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Nombre)
             </th>
@@ -44,9 +41,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Mail)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.contrato.Id)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -54,9 +48,6 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Nombre)
                 </td>
@@ -71,9 +62,6 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Mail)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.contrato.Id)
                 </td>
                 <td>
                     @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |

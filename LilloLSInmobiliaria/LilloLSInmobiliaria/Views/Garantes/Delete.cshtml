@@ -6,7 +6,7 @@
 @{
     if (TempData["Mensaje"] != null)
     {
-        <h1>@TempData["Mensaje"]</h1>
+        <p>@TempData["Mensaje"]</p>
     }
 
 }
@@ -47,12 +47,6 @@
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Mail)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.contrato.Id)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.contrato.Id)
         </dd>
     </dl>
 

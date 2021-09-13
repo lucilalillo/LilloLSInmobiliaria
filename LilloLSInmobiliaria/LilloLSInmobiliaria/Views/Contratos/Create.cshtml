@@ -31,7 +31,7 @@
                 <select class="form-control" name="InmuebleId">
                     @foreach (var item in (IList<Inmueble>)ViewBag.Inmueble)
                     {
-                        <option value="@item.Id"> @(item.Id)</option>
+                        <option value="@item.Id"> @(item.Direccion)</option>
                     }
                 </select>
             </div>

@@ -1,0 +1,72 @@
+﻿@model IEnumerable<LilloLSInmobiliaria.Models.Pago>
+
+@{
+    ViewData["Title"] = "Index";
+}
+@{
+    ViewData["Title"] = "Index";
+}
+
+@{
+    if (TempData["Error"] != null)
+    {
+        <p>@TempData["Error"]</p>
+    }
+
+}
+@{
+    if (TempData["Mensaje"] != null)
+    {
+        <p>@TempData["Mensaje"]</p>
+    }
+
+}
+
+<h1>Listado de Pagos</h1>
+
+<p>
+    <a asp-action="Create">Crear Nuevo Pago</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NumPago)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaPago)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Importe)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContratoId)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumPago)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaPago)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Importe)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ContratoId)
+                </td>
+                <td>
+                    @Html.ActionLink("Editar", "Edit", new { id=item.Id }) |
+                    @Html.ActionLink("Detalle", "Details", new { id=item.Id }) |
+                    @Html.ActionLink("Eliminar", "Delete", new { id=item.Id })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

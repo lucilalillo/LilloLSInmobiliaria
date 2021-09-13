@@ -145,8 +145,8 @@ C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloL
 C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Garantes\Create.cshtml.g.cs
 C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Garantes\Edit.cshtml.g.cs
 C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Garantes\Delete.cshtml.g.cs
-C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Pago\Index.cshtml.g.cs
-C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Pago\Details.cshtml.g.cs
-C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Pago\Create.cshtml.g.cs
-C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Pago\Edit.cshtml.g.cs
-C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Pago\Delete.cshtml.g.cs
+C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Pagos\Create.cshtml.g.cs
+C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Pagos\Delete.cshtml.g.cs
+C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Pagos\Details.cshtml.g.cs
+C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Pagos\Edit.cshtml.g.cs
+C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Pagos\Index.cshtml.g.cs

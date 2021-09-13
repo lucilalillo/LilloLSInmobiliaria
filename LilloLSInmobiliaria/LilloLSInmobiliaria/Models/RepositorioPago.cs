@@ -88,9 +88,9 @@ namespace LilloLSInmobiliaria.Models
 			{
 
 				string sql = $"SELECT pa.Id, NumPago, FechaPago, Importe, pa.ContratoId, " +
-					"c.IdInmu, i.Direccion, c.IdInqui, inq.Apellido,  " +
-					"c.FechaInicio, c.FechaFin, c.Monto, c.Estado " +
-					"FROM Pago pa, Contrato c, Inmueble i, Inquilino inq " +
+					"c.InmuebleId, i.Direccion, c.InquilinoId, inq.Apellido,  " +
+					"c.FecInicio, c.FecFin, c.Monto, c.Estado " +
+					"FROM pagos pa, contratos c, inmuebles i, inquilinos inq " +
 					"WHERE pa.ContratoId = c.Id AND c.InmuebleId = i.Id " +
 					"AND c.InquilinoId = inq.Id; ";
 				using (SqlCommand command = new SqlCommand(sql, connection))
@@ -146,8 +146,8 @@ namespace LilloLSInmobiliaria.Models
 			Pago pa = null;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"SELECT pa.IdPago, NumPago, FechaPago, Importe, ContratoId, ca.IdInmu, ca.IdInqui, ca.FechaInicio, ca.FechaFin, ca.Monto, ca.Estado  " +
-					$"FROM Pago pa INNER JOIN Contrato ca ON pa.ContratoId = ca.Id" +
+				string sql = $"SELECT pa.Id, NumPago, FechaPago, Importe, ContratoId, ca.InmuebleId, ca.InquilinoId, ca.FecInicio, ca.FecFin, ca.Monto, ca.Estado  " +
+					$"FROM pagos pa INNER JOIN contratos ca ON pa.ContratoId = ca.Id" +
 					$" WHERE pa.Id=@idPago";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{

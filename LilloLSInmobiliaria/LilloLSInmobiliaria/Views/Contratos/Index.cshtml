@@ -22,7 +22,9 @@
 <h1>Listado de Contratos</h1>
 
 <p>
-    <a asp-action="Create">Crear nuevo Contrato</a>
+    <a asp-action="Create">Crear Nuevo Contrato</a>
+    <br>
+    <a asp-controller="Pagos" asp-action="Create">Crear Nuevo Pago</a>
 </p>
 <table class="table">
     <thead>
@@ -54,34 +56,34 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr>
-            <td>
-                @(item.Inmueble.Direccion)
-            </td>
-            <td>
-                @(item.Inquilino.Nombre+" "+item.Inquilino.Apellido)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FecInicio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FecFin)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Monto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Estado)
-            </td>
-            <td>
-                @(item.Garante.Nombre+" "+item.Garante.Apellido)
-            </td>
-            <td>
-                @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Detalles", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Eliminar", "Delete", new { id = item.Id })
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    @(item.Inmueble.Direccion)
+                </td>
+                <td>
+                    @(item.Inquilino.Nombre+" "+item.Inquilino.Apellido)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FecInicio)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FecFin)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Monto)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Estado)
+                </td>
+                <td>
+                    @(item.Garante.Nombre+" "+item.Garante.Apellido)
+                </td>
+                <td>
+                    @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Detalles", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Eliminar", "Delete", new { id = item.Id })
+                </td>
+            </tr>
         }
     </tbody>
 </table>

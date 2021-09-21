@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LilloLSInmobiliaria.Models
 {
-    public class RepositorioInmueble : RepositorioBase {
+    public class RepositorioInmueble : RepositorioBase, IRepositorioInmueble {
 
         public RepositorioInmueble(IConfiguration config): base(config)
         {
@@ -55,6 +55,46 @@ namespace LilloLSInmobiliaria.Models
                     command.CommandType = CommandType.Text;
                     connection.Open();
                     res = command.ExecuteNonQuery();
+                    connection.Close();
+                }
+            }
+            return res;
+        }
+
+        public IList<Inmueble> BuscarPorPropietario(int idPropietario)
+        {
+            List<Inmueble> res = new List<Inmueble>();
+            Inmueble inm = null;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sql = $"SELECT Id, PropietarioId, Direccion, Tipo, Precio, Estado" +
+                    $" FROM inmuebles" +
+                    $" WHERE Id=@idPropietario AND Disponible = 1";
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.Parameters.Add("@idPropietario", SqlDbType.Int).Value = idPropietario;
+                    command.CommandType = CommandType.Text;
+                    connection.Open();
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        inm = new Inmueble
+                        {
+                            Id = reader.GetInt32(0),
+                            Prop = new Propietario
+                            {
+                                Id = reader.GetInt32(1),
+                                Nombre = reader.GetString(2),
+                                Apellido = reader.GetString(3),
+                            },
+                            Direccion = reader.GetString(4),
+                            Tipo = reader.GetString(5),
+                            Precio = reader.GetDecimal(6),
+                            Estado = reader.GetBoolean(7),
+
+                        };
+                        res.Add(inm);
+                    }
                     connection.Close();
                 }
             }

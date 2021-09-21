@@ -212,3 +212,7 @@ C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloL
 C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Usuarios\Index.cshtml.g.cs
 C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Usuarios\Login.cshtml.g.cs
 C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Usuarios\Perfil.cshtml.g.cs
+C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Home\AlgoRestringido.cshtml.g.cs
+C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Home\Privado.cshtml.g.cs
+C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Home\Restringido.cshtml.g.cs
+C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Home\Seguro.cshtml.g.cs

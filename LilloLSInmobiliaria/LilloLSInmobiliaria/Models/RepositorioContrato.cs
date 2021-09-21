@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LilloLSInmobiliaria.Models
 {
-    public class RepositorioContrato : RepositorioBase
+    public class RepositorioContrato : RepositorioBase, IRepositorioContrato
     {        
 		public RepositorioContrato(IConfiguration config): base(config)
         {
@@ -228,5 +228,56 @@ namespace LilloLSInmobiliaria.Models
 			return res;
 		}
 
+        public IList<Contrato> ObtenerTodosVigentes(DateTime fechaInicio, DateTime fechaFin)
+        {
+			IList<Contrato> res = new List<Contrato>();
+			using (SqlConnection connection = new SqlConnection(connectionString))
+			{
+				string sql = $"SELECT c.Id, c.InmuebleId, c.InquilinoId, FecInicio, FecFin, Monto, c.Estado, i.Direccion, inq.Nombre, inq.Apellido  " +
+					$" FROM contratos c INNER JOIN inmuebles i ON c.InmuebleId = i.Id " +
+					$"INNER JOIN inquilinos inq ON c.InquilinoId = inq.Id " +
+					$"WHERE c.Estado = 1" +
+					$"AND((FecInicio < @fecInicio)AND(FecFin > @fecFin))" +
+					$"OR((FecInicio BETWEEN @fecInicio AND @fecFin)AND(FecFin BETWEEN @fecInicio AND @fecFin))" +
+					$"OR((FecInicio < @fecInicio)AND(FecFin BETWEEN @fecInicio AND @fecFin))" +
+					$"OR((FecInicio BETWEEN @fecInicio AND @fecFin)AND(FecFin > @fecFin));";
+				using (SqlCommand command = new SqlCommand(sql, connection))
+				{
+					command.Parameters.Add("@fecInicio", SqlDbType.DateTime).Value = fechaInicio;
+					command.Parameters.Add("@fecFin", SqlDbType.DateTime).Value = fechaFin;
+					command.CommandType = CommandType.Text;
+					connection.Open();
+					var reader = command.ExecuteReader();
+					while (reader.Read())
+					{
+						Contrato c = new Contrato
+						{
+							Id = reader.GetInt32(0),
+							InmuebleId = reader.GetInt32(1),
+							InquilinoId = reader.GetInt32(2),
+							FecInicio = reader.GetDateTime(3),
+							FecFin = reader.GetDateTime(4),
+							Monto = reader.GetDecimal(5),
+							Estado = reader.GetBoolean(6),
+							Inmueble = new Inmueble
+							{
+								Id = reader.GetInt32(1),
+								Direccion = reader.GetString(7),
+							},
+							Inquilino = new Inquilino
+							{
+								Id = reader.GetInt32(2),
+								Nombre = reader.GetString(8),
+								Apellido = reader.GetString(9),
+							},
+
+						};
+						res.Add(c);
+					}
+					connection.Close();
+				}
+			}
+			return res;
+		}
 	}
-}
+    }

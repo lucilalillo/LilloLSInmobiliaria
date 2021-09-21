@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LilloLSInmobiliaria.Models
 {
-    public class RepositorioPago : RepositorioBase
+    public class RepositorioPago : RepositorioBase, IRepositorioPago
     {
 		public RepositorioPago(IConfiguration config) : base(config)
 		{
@@ -194,5 +194,62 @@ namespace LilloLSInmobiliaria.Models
 			}
 			return pa;
 		}
+
+        public IList<Pago> ObtenerTodosPorIdContrato(int idContrato)
+        {
+			IList<Pago> res = new List<Pago>();
+			using (SqlConnection connection = new SqlConnection(connectionString))
+			{
+				string sql = $"SELECT pa.Id, NumPago, FechaPago, Importe, ContratoId, " +
+					$" c.InmuebleId, i.Direccion, c.InquilinoId, inq.Apellido, c.FecInicio, c.FecFin, c.Monto, c.Estado " +
+					$" FROM pagos pa, contratos c, " +
+					"inmuebles i, inquilinos inq WHERE pa.ContratoId = c.Id " +
+					"AND c.InmuebleId = i.Id " +
+					"AND c.InquilinoId = inq.Id AND pa.ContratoId = @idContrato; ";
+				using (SqlCommand command = new SqlCommand(sql, connection))
+				{
+					command.Parameters.Add("@idContrato", SqlDbType.Int).Value = idContrato;
+					command.CommandType = CommandType.Text;
+					connection.Open();
+					var reader = command.ExecuteReader();
+					while (reader.Read())
+					{
+						Pago pa = new Pago
+						{
+							Id = reader.GetInt32(0),
+							NumPago = reader.GetInt32(1),
+							FechaPago = reader.GetDateTime(2),
+							Importe = reader.GetDecimal(3),
+							ContratoId = reader.GetInt32(4),
+							contrato = new Contrato
+							{
+								Id = reader.GetInt32(4),
+								InmuebleId = reader.GetInt32(5),
+								Inmueble = new Inmueble
+								{
+									Id = reader.GetInt32(5),
+									Direccion = reader.GetString(6),
+								},
+								InquilinoId = reader.GetInt32(7),
+								Inquilino = new Inquilino
+								{
+									Id = reader.GetInt32(7),
+									Apellido = reader.GetString(8)
+								},
+								FecInicio = reader.GetDateTime(9),
+								FecFin = reader.GetDateTime(10),
+								Monto = reader.GetDecimal(11),
+								Estado = reader.GetBoolean(12),
+
+							}
+
+						};
+						res.Add(pa);
+					}
+					connection.Close();
+				}
+			}
+			return res;
+		}
 	}
-    }
+}

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace LilloLSInmobiliaria.Models
 {
-    interface IRepositorioUsuario : IRepositorio<Usuario>
+    public interface IRepositorioUsuario : IRepositorio<Usuario>
     {
         Usuario ObtenerPorEmail(string email);
         IList<Usuario> BuscarPorNombre(string nombre);

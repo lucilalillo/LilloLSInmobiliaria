@@ -175,7 +175,7 @@ namespace LilloLSInmobiliaria.Controllers
             }
         }
 
-        // GET: UsuarioController/Perfil  
+        // GET: UsuariosController/Perfil  
         public ActionResult Perfil()
         {
             ViewData["Title"] = "Mi perfil";
@@ -184,7 +184,7 @@ namespace LilloLSInmobiliaria.Controllers
             return View("Edit", u);
         }
 
-        // POST: UsuarioController/Perfil/5 
+        // POST: UsuariosController/Perfil/5 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Perfil(Usuario user)
@@ -222,7 +222,7 @@ namespace LilloLSInmobiliaria.Controllers
         }
 
 
-        //  GET: UsuarioController/Avatar
+        //  GET: UsuariosController/Avatar
         [Authorize]
         public IActionResult Avatar()
         {
@@ -238,7 +238,7 @@ namespace LilloLSInmobiliaria.Controllers
             return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
         }
 
-        // GET: UsuarioController/Foto
+        // GET: UsuariosController/Foto
         [Authorize]
         public ActionResult Foto()
         {
@@ -257,7 +257,7 @@ namespace LilloLSInmobiliaria.Controllers
                 throw;
             }
         }
-        // GET: UsuarioController/Datos
+        // GET: UsuariosController/Datos
         [Authorize]
         public ActionResult Datos()
         {
@@ -279,7 +279,7 @@ namespace LilloLSInmobiliaria.Controllers
         }
 
 
-        // GET: UsuarioController/Login/
+        // GET: UsuariosController/Login/
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
@@ -287,11 +287,11 @@ namespace LilloLSInmobiliaria.Controllers
             return View();
         }
 
-        // POST: UsuarioController/Login/
+        // POST: UsuariosController/Login/
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(LoginView login)
+        public async Task<IActionResult> Login(Models.Login login)
         {
             try
             {
@@ -305,7 +305,7 @@ namespace LilloLSInmobiliaria.Controllers
                         iterationCount: 1000,
                         numBytesRequested: 256 / 8));
 
-                    var e = repo.ObtenerPorEmail(login.Usuario);
+                    var e = repo.ObtenerPorEmail(login.Email);
                     if (e == null || e.Clave != hashed)
                     {
                         ModelState.AddModelError("", "El email o la clave no son correctos");
@@ -339,7 +339,7 @@ namespace LilloLSInmobiliaria.Controllers
             }
         }
 
-        // GET: UsuarioController/salir
+        // GET: UsuariosController/salir
         [Route("salir", Name = "logout")]
         public async Task<ActionResult> Logout()
         {

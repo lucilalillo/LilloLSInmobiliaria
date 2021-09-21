@@ -11,13 +11,13 @@ namespace LilloLSInmobiliaria.Controllers
 {
     public class PropietariosController : Controller
     {
-        RepositorioPropietario repo;
-        protected readonly IConfiguration config;
+        private readonly IRepositorioPropietario repo;
+        private readonly IConfiguration config;
 
-        public PropietariosController(IConfiguration config)
+        public PropietariosController(IRepositorioPropietario repo, IConfiguration config)
         {
             this.config = config;
-            repo = new RepositorioPropietario(config);
+            this.repo = repo;
         }
 
         // GET: PropietariosController

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace LilloLSInmobiliaria.Models
 {
-    interface IRepositorio<T>
+    public interface IRepositorio<T>
     {
         int Alta(T p);
         int Baja(int id);

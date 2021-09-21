@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace LilloLSInmobiliaria.Models
 {
-    interface IRepositorioPago : IRepositorio<Pago>
+    public interface IRepositorioPago : IRepositorio<Pago>
     {
         IList<Pago> ObtenerTodosPorIdContrato(int idContrato);
     }

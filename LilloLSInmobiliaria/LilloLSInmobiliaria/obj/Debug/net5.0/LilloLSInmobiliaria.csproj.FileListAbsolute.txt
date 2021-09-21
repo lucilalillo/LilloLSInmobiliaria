@@ -216,3 +216,4 @@ C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloL
 C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Home\Privado.cshtml.g.cs
 C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Home\Restringido.cshtml.g.cs
 C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\obj\Debug\net5.0\Razor\Views\Home\Seguro.cshtml.g.cs
+C:\Users\Usuario\Documents\GitHub\LilloLSInmobiliaria\LilloLSInmobiliaria\LilloLSInmobiliaria\bin\Debug\net5.0\linq2db.dll

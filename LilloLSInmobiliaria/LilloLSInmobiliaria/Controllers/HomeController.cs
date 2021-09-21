@@ -18,14 +18,14 @@ namespace LilloLSInmobiliaria.Controllers
     public class HomeController : Controller
     {
         private readonly IConfiguration configuration;
-        private readonly RepositorioInmueble repoInmu;
-        private readonly RepositorioPropietario repoProp;
+        private readonly IRepositorioInmueble repoInmu;
+        private readonly IRepositorioPropietario repoProp;
 
-        public HomeController(IConfiguration configuration)
+        public HomeController(IRepositorioPropietario propietarios, IRepositorioInmueble inmueble, IConfiguration configuration)
         {
             this.configuration = configuration;
-            repoInmu = new RepositorioInmueble(configuration);
-            repoProp = new RepositorioPropietario(configuration);
+            this.repoProp = propietarios;
+            this.repoInmu = inmueble;
         }
         public IActionResult Index()
         {

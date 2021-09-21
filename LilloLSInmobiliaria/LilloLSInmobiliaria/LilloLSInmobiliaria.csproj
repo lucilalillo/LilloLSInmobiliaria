@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="linq2db" Version="3.4.4" />
     <PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" Version="161.46437.65" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />

@@ -1,3 +1,5 @@
+using LilloLSInmobiliaria.Models;
+using LinqToDB;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -47,15 +49,16 @@ namespace LilloLSInmobiliaria
                                   //IUserIdProvider permite cambiar el ClaimType usado para obtener el UserIdentifier en Hub
                                   // services.AddSingleton<IUserIdProvider, UserIdProvider>();
             /*
+            //SOLO PARA INYECCION DE DEPENDENCIAS
             Transient objects are always different; a new instance is provided to every controller and every service.
             Scoped objects are the same within a request, but different across different requests.
             Singleton objects are the same for every object and every request.
             */
 
 
-            /* services.AddTransient<IRepositorio<Propietario>, RepositorioPropietario>();
+             services.AddTransient<IRepositorio<Propietario>, RepositorioPropietario>();
              services.AddTransient<IRepositorioPropietario, RepositorioPropietario>();
-             services.AddTransient<IRepositorio<Inquilino>, RepositorioInquilino>();
+             //services.AddTransient<IRepositorio<Inquilino>, RepositorioInquilino>();
              services.AddTransient<IRepositorio<Inmueble>, RepositorioInmueble>();
              services.AddTransient<IRepositorioInmueble, RepositorioInmueble>();
              services.AddTransient<IRepositorio<Pago>, RepositorioPago>();
@@ -64,7 +67,7 @@ namespace LilloLSInmobiliaria
              services.AddTransient<IRepositorioContrato, RepositorioContrato>();
              services.AddTransient<IRepositorio<Usuario>, RepositorioUsuario>();
              services.AddTransient<IRepositorioUsuario, RepositorioUsuario>();
-            */
+
 
         }
 

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace LilloLSInmobiliaria.Models
 {
-    interface IRepositorioContrato : IRepositorio<Contrato>
+    public interface IRepositorioContrato : IRepositorio<Contrato>
     {
         IList<Contrato> ObtenerPorInmuebleId(int id);
         IList<Contrato> ObtenerTodosVigentes(DateTime fechaInicio, DateTime fechaFin);

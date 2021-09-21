@@ -3,9 +3,6 @@
 @{
     ViewData["Title"] = "Edit";
 }
-@{
-    ViewData["Title"] = "Edit";
-}
 
 @{
     if (TempData["Error"] != null)
@@ -46,9 +43,14 @@
                 <span asp-validation-for="Importe" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ContratoId" class="control-label"></label>
-                <input asp-for="ContratoId" class="form-control" />
-                <span asp-validation-for="ContratoId" class="text-danger"></span>
+                <label asp-for="contrato.InquilinoId" class="control-label"></label>
+                <select class="form-control" name="contrato.InquilinoId">
+                    @foreach (var item in (IList<Contrato>)ViewBag.Contratos)
+                    {
+                        @:<option @(item.Id == Model.contrato.InquilinoId ? "selected" : "") Value="@item.Id">@(item.Inquilino.Nombre+" "+item.Inquilino.Apellido)</option>
+                    }
+                </select>
+                <span asp-validation-for="contrato.InquilinoId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Modificar" class="btn btn-primary" />

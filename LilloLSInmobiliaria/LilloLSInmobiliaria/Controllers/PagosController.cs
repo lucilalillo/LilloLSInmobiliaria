@@ -12,12 +12,14 @@ namespace LilloLSInmobiliaria.Controllers
     public class PagosController : Controller
     {
         RepositorioPago repo;
+        RepositorioContrato repoCon;
         private readonly IConfiguration config;
 
         public PagosController(IConfiguration config)
         {
             this.config = config;
             repo = new RepositorioPago(config);
+            repoCon = new RepositorioContrato(config);
         }
 
         // GET: PagoController
@@ -48,6 +50,7 @@ namespace LilloLSInmobiliaria.Controllers
         // GET: PagoController/Create
         public ActionResult Create()
         {
+            ViewBag.Contratos = repoCon.ObtenerTodos();
             return View();
         }
 
@@ -70,6 +73,7 @@ namespace LilloLSInmobiliaria.Controllers
         // GET: PagoController/Edit/5
         public ActionResult Edit(int id)
         {
+            ViewBag.Contratos = repoCon.ObtenerTodos();
             var i = repo.ObtenerPorId(id);
             if (TempData.ContainsKey("Mensaje"))
                 ViewBag.Mensaje = TempData["Mensaje"];

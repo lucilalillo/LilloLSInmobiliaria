@@ -21,9 +21,9 @@ namespace LilloLSInmobiliaria.Controllers
     {
         private readonly IConfiguration config;
         private readonly IWebHostEnvironment environment;
-        private readonly RepositorioUsuario repo;
+        private readonly IRepositorioUsuario repo;
 
-        public UsuariosController(IConfiguration config, IWebHostEnvironment environment, RepositorioUsuario repo)
+        public UsuariosController(IConfiguration config, IWebHostEnvironment environment, IRepositorioUsuario repo)
         {
             this.config = config;
             this.environment = environment;
@@ -48,7 +48,7 @@ namespace LilloLSInmobiliaria.Controllers
         }
 
         // GET: UsuariosController/Create
-        [Authorize(Policy = "Administrador")]
+      //  [Authorize(Policy = "Administrador")]
         public ActionResult Create()
         {
             ViewBag.Roles = Usuario.ObtenerRoles();

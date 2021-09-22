@@ -1,4 +1,5 @@
 ﻿using LilloLSInmobiliaria.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -11,18 +12,19 @@ namespace LilloLSInmobiliaria.Controllers
 {
     public class InmueblesController : Controller
     {
-         RepositorioInmueble repo;
-         RepositorioPropietario repoProp;
-        protected readonly IConfiguration config;
+         IRepositorioInmueble repo;
+         IRepositorioPropietario repoProp;
+         protected readonly IConfiguration config;
 
-        public InmueblesController(IConfiguration config)
+        public InmueblesController(IRepositorioInmueble repo, IRepositorioPropietario repoProp, IConfiguration config)
         {
             this.config = config;
-            repo = new RepositorioInmueble(config);
-            repoProp = new RepositorioPropietario(config);
+            this.repo = repo;
+            this.repoProp = repoProp;
         }
 
         // GET: InmueblesController
+        [Authorize(Policy = "Empleado")]
         public ActionResult Index()
         {
             var lista = repo.ObtenerTodos();
@@ -36,8 +38,9 @@ namespace LilloLSInmobiliaria.Controllers
             return View(lista);
         }
 
-    // GET: InmueblesController/Details/5
-    public ActionResult Details(int id)
+        // GET: InmueblesController/Details/5
+        [Authorize(Policy = "Empleado")]
+        public ActionResult Details(int id)
         {
         Inmueble inmu = new Inmueble();
         inmu = repo.ObtenerPorId(id);
@@ -45,8 +48,9 @@ namespace LilloLSInmobiliaria.Controllers
 
     }
 
-    // GET: InmueblesController/Create
-    public ActionResult Create()
+        // GET: InmueblesController/Create
+        [Authorize(Policy = "Empleado")]
+        public ActionResult Create()
         {
             ViewBag.Propietarios = repoProp.ObtenerTodos();
             return View();
@@ -55,6 +59,7 @@ namespace LilloLSInmobiliaria.Controllers
         // POST: InmueblesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Empleado")]
         public ActionResult Create(Inmueble inmueble)
         {
             try
@@ -72,6 +77,7 @@ namespace LilloLSInmobiliaria.Controllers
         }
 
         // GET: InmueblesController/Edit/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Edit(int id)
         {
             ViewBag.Propietarios = repoProp.ObtenerTodos();
@@ -87,6 +93,7 @@ namespace LilloLSInmobiliaria.Controllers
         // POST: InmueblesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Edit(int id, Inmueble inmu)
         {
             try
@@ -106,6 +113,7 @@ namespace LilloLSInmobiliaria.Controllers
         }
 
         // GET: InmueblesController/Delete/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
             var p = repo.ObtenerPorId(id);
@@ -116,6 +124,7 @@ namespace LilloLSInmobiliaria.Controllers
         // POST: InmueblesController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Inmueble inmu)
         {
             try

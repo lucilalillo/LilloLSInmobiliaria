@@ -58,7 +58,7 @@ namespace LilloLSInmobiliaria.Controllers
         // POST: UsuariosController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = "Administrador")]
+       // [Authorize(Policy = "Administrador")]
         public ActionResult Create(Usuario u)
         {
             if (!ModelState.IsValid)

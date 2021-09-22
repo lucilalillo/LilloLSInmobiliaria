@@ -1,7 +1,9 @@
 ﻿using LilloLSInmobiliaria.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.SqlServer.Management.Dmf;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +23,7 @@ namespace LilloLSInmobiliaria.Controllers
         }
 
         // GET: PropietariosController
+        [Authorize(Policy = "Empleado")]
         public ActionResult Index()
         {
             try
@@ -39,6 +42,7 @@ namespace LilloLSInmobiliaria.Controllers
         }
 
         // GET: PropietariosController/Details/5
+        [Authorize(Policy = "Empleado")]
         public ActionResult Details(int id)
         {
             Propietario p = new Propietario();
@@ -55,6 +59,7 @@ namespace LilloLSInmobiliaria.Controllers
         // POST: PropietariosController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Empleado")]
         public ActionResult Create(Propietario p)
         {
             try
@@ -83,6 +88,7 @@ namespace LilloLSInmobiliaria.Controllers
         // POST: PropietariosController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Empleado")]
         public ActionResult Edit(int id, IFormCollection collection)
         {
             Propietario p = null;
@@ -108,6 +114,7 @@ namespace LilloLSInmobiliaria.Controllers
         }
 
         // GET: PropietariosController/Delete/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
             var p = repo.ObtenerPorId(id);
@@ -121,6 +128,7 @@ namespace LilloLSInmobiliaria.Controllers
         // POST: PropietariosController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Propietario p)
         {
             try

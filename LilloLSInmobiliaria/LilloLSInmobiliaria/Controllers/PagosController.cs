@@ -1,4 +1,5 @@
 ﻿using LilloLSInmobiliaria.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -11,18 +12,19 @@ namespace LilloLSInmobiliaria.Controllers
 {
     public class PagosController : Controller
     {
-        RepositorioPago repo;
-        RepositorioContrato repoCon;
+        IRepositorioPago repo;
+        IRepositorioContrato repoCon;
         private readonly IConfiguration config;
 
-        public PagosController(IConfiguration config)
+        public PagosController(IRepositorioPago repo, IRepositorioContrato repoCon, IConfiguration config)
         {
             this.config = config;
-            repo = new RepositorioPago(config);
-            repoCon = new RepositorioContrato(config);
+            this.repo = repo;
+            this.repoCon = repoCon;
         }
 
         // GET: PagoController
+        [Authorize(Policy = "Empleado")]
         public ActionResult Index()
         {
             try
@@ -40,6 +42,7 @@ namespace LilloLSInmobiliaria.Controllers
         }
 
         // GET: PagoController/Details/5
+        [Authorize(Policy = "Empleado")]
         public ActionResult Details(int id)
         {
             Pago p = new Pago();
@@ -48,6 +51,7 @@ namespace LilloLSInmobiliaria.Controllers
         }
 
         // GET: PagoController/Create
+        [Authorize(Policy = "Empleado")]
         public ActionResult Create()
         {
             ViewBag.Contratos = repoCon.ObtenerTodos();
@@ -57,6 +61,7 @@ namespace LilloLSInmobiliaria.Controllers
         // POST: PagoController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Empleado")]
         public ActionResult Create(Pago p)
         {
             try
@@ -71,6 +76,7 @@ namespace LilloLSInmobiliaria.Controllers
         }
 
         // GET: PagoController/Edit/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Edit(int id)
         {
             ViewBag.Contratos = repoCon.ObtenerTodos();
@@ -85,6 +91,7 @@ namespace LilloLSInmobiliaria.Controllers
         // POST: PagoController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Edit(int id, Pago pago)
         {
             Pago p = null;
@@ -107,6 +114,7 @@ namespace LilloLSInmobiliaria.Controllers
         }
 
         // GET: PagoController/Delete/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
             var i = repo.ObtenerPorId(id);
@@ -120,6 +128,7 @@ namespace LilloLSInmobiliaria.Controllers
         // POST: PagoController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Pago pago)
         {
             try

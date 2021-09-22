@@ -1,4 +1,5 @@
 ﻿using LilloLSInmobiliaria.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -11,16 +12,17 @@ namespace LilloLSInmobiliaria.Controllers
 {
     public class InquilinosController : Controller
     {
-        RepositorioInquilino repo;
+        IRepositorioInquilino repo;
         protected readonly IConfiguration config;
 
-        public InquilinosController(IConfiguration config)
+        public InquilinosController(IRepositorioInquilino repo, IConfiguration config)
         {
             this.config = config;
-            repo = new RepositorioInquilino(config);
+            this.repo = repo;
         }
 
         // GET: InquilinosController
+        [Authorize(Policy = "Empleado")]
         public ActionResult Index()
         {
             try
@@ -38,6 +40,7 @@ namespace LilloLSInmobiliaria.Controllers
         }
 
         // GET: InquilinosController/Details/5
+        [Authorize(Policy = "Empleado")]
         public ActionResult Details(int id)
         {
             Inquilino i = new Inquilino();
@@ -46,6 +49,7 @@ namespace LilloLSInmobiliaria.Controllers
         }
 
         // GET: InquilinosController/Create
+        [Authorize(Policy = "Empleado")]
         public ActionResult Create()
         {
             return View();
@@ -54,6 +58,7 @@ namespace LilloLSInmobiliaria.Controllers
         // POST: InquilinosController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Empleado")]
         public ActionResult Create(Inquilino i)
         {
             try
@@ -68,6 +73,7 @@ namespace LilloLSInmobiliaria.Controllers
         }
 
         // GET: InquilinosController/Edit/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Edit(int id)
         {
             var i = repo.ObtenerPorId(id);
@@ -81,6 +87,7 @@ namespace LilloLSInmobiliaria.Controllers
         // POST: InquilinosController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Edit(int id, IFormCollection collection)
         {
             Inquilino i = null;
@@ -105,6 +112,7 @@ namespace LilloLSInmobiliaria.Controllers
         }
 
         // GET: InquilinosController/Delete/5
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id)
         {
             var i = repo.ObtenerPorId(id);
@@ -118,6 +126,7 @@ namespace LilloLSInmobiliaria.Controllers
         // POST: InquilinosController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Inquilino i)
         {
             try

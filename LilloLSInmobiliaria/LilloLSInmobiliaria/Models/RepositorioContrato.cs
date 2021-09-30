@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace LilloLSInmobiliaria.Models
 {
-    public class RepositorioContrato : RepositorioBase, IRepositorioContrato
-    {        
-		public RepositorioContrato(IConfiguration config): base(config)
-        {
+	public class RepositorioContrato : RepositorioBase
+	{
+		public RepositorioContrato(IConfiguration config) : base(config)
+		{
 
-        }
+		}
 
 		public int Alta(Contrato c)
 		{
@@ -32,7 +32,7 @@ namespace LilloLSInmobiliaria.Models
 					command.Parameters.AddWithValue("@fechaFin", c.FecFin);
 					command.Parameters.AddWithValue("@monto", c.Monto);
 					command.Parameters.AddWithValue("@estado", c.Estado);
-					command.Parameters.AddWithValue("@idgarante",c.GaranteId);
+					command.Parameters.AddWithValue("@idgarante", c.GaranteId);
 					connection.Open();
 					res = Convert.ToInt32(command.ExecuteScalar());
 					c.Id = res;
@@ -76,7 +76,7 @@ namespace LilloLSInmobiliaria.Models
 					command.Parameters.AddWithValue("@fechaFin", c.FecFin);
 					command.Parameters.AddWithValue("@monto", c.Monto);
 					command.Parameters.AddWithValue("@estado", c.Estado);
-					command.Parameters.AddWithValue("@idgarante",c.GaranteId);
+					command.Parameters.AddWithValue("@idgarante", c.GaranteId);
 					command.Parameters.AddWithValue("@id", c.Id);
 					connection.Open();
 					res = command.ExecuteNonQuery();
@@ -125,7 +125,7 @@ namespace LilloLSInmobiliaria.Models
 								Direccion = reader.GetString(10),
 							},
 							Garante = new Garante
-							{ 
+							{
 								Id = reader.GetInt32(7),
 								Nombre = reader.GetString(11),
 								Apellido = reader.GetString(12),
@@ -214,7 +214,8 @@ namespace LilloLSInmobiliaria.Models
 								Nombre = reader.GetString(9),
 								Apellido = reader.GetString(10),
 							},
-							Garante = new Garante {
+							Garante = new Garante
+							{
 								Id = reader.GetInt32(7),
 								Nombre = reader.GetString(11),
 								Apellido = reader.GetString(12),
@@ -228,8 +229,8 @@ namespace LilloLSInmobiliaria.Models
 			return res;
 		}
 
-        public IList<Contrato> ObtenerTodosVigentes(DateTime fechaInicio, DateTime fechaFin)
-        {
+		public IList<Contrato> ObtenerTodosVigentes(DateTime fechaInicio, DateTime fechaFin)
+		{
 			IList<Contrato> res = new List<Contrato>();
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
@@ -279,5 +280,43 @@ namespace LilloLSInmobiliaria.Models
 			}
 			return res;
 		}
+
+		/*public List<Contrato> mostrarContratosDelInmueble(int id)
+		{
+			var res = new List<Contrato>();
+			using (SqlConnection connection = new SqlConnection(connectionString))
+			{
+				string sql = $"SELECT c.Id, c.FecInicio, c.FecFin, i.Nombre, i.Apellido, e.Direccion " +
+					$" FROM contratos c INNER JOIN inquilinos i ON i.Id = c.Id INNER JOIN inmuebles e " +
+					$"ON e.Id = c.InmuebleId WHERE c.InmuebleId = @id";
+				using (SqlCommand command = new SqlCommand(sql, connection))
+				{
+					command.Parameters.Add("@id", SqlDbType.Int).Value = id;
+					connection.Open();
+					var reader = command.ExecuteReader();
+					while (reader.Read())
+					{
+						Contrato c = new Contrato
+						{
+							Id = reader.GetInt32(0),
+							FecInicio = reader.GetDateTime(1),
+							FecFin = reader.GetDateTime(2),
+							Inquilino = new Inquilino
+							{
+								Nombre = reader.GetString(3),
+								Apellido = reader.GetString(4),
+							},
+							Inmueble = new Inmueble
+							{
+								Direccion = reader.GetString(5),
+							}
+						};
+						res.Add(c);
+					}
+					connection.Close();
+				}
+			}
+			return res;
+		}*/
 	}
-    }
+}

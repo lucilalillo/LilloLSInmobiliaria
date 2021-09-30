@@ -48,7 +48,7 @@ namespace LilloLSInmobiliaria.Controllers
         }
 
         // GET: UsuariosController/Create
-      //  [Authorize(Policy = "Administrador")]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Create()
         {
             ViewBag.Roles = Usuario.ObtenerRoles();
@@ -58,7 +58,7 @@ namespace LilloLSInmobiliaria.Controllers
         // POST: UsuariosController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-       // [Authorize(Policy = "Administrador")]
+        [Authorize(Policy = "Administrador")]
         public ActionResult Create(Usuario u)
         {
             if (!ModelState.IsValid)
@@ -72,7 +72,6 @@ namespace LilloLSInmobiliaria.Controllers
                         iterationCount: 1000,
                         numBytesRequested: 256 / 8));
                 u.Clave = hashed;
-                u.Rol = User.IsInRole("Administrador") ? u.Rol : (int)enRoles.Empleado;
                 var nbreRnd = Guid.NewGuid();//posible nombre aleatorio
                 int res = repo.Alta(u);
                 if (u.AvatarFile != null && u.Id > 0)
@@ -103,6 +102,19 @@ namespace LilloLSInmobiliaria.Controllers
             }
         }
 
+        // GET: UsuariosController/Edit/5
+        [Authorize(Policy = "Administrador")]
+        public ActionResult Edit(int id)
+        {
+            ViewData["Title"] = "Editar usuario";
+            var u = repo.ObtenerPorId(id);
+            ViewBag.Roles = Usuario.ObtenerRoles();
+            if (TempData.ContainsKey("Mensaje"))
+                ViewBag.Mensaje = TempData["Mensaje"];
+            if (TempData.ContainsKey("Error"))
+                ViewBag.Error = TempData["Error"];
+            return View(u);
+        }
 
         // POST: UsuariosController/Edit/5
         [HttpPost]

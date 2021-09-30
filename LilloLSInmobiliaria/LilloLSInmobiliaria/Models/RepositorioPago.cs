@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LilloLSInmobiliaria.Models
 {
-    public class RepositorioPago : RepositorioBase, IRepositorioPago
+    public class RepositorioPago : RepositorioBase
     {
 		public RepositorioPago(IConfiguration config) : base(config)
 		{

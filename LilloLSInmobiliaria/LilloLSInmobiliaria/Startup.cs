@@ -42,7 +42,7 @@ namespace LilloLSInmobiliaria
                 options.AddPolicy("Administrador", policy => policy.RequireRole("Administrador", "SuperAdministrador"));
                 options.AddPolicy("SuperAdministrador", policy => policy.RequireClaim(ClaimTypes.Role, "SuperAdministrador"));
                 options.AddPolicy("Administrador", policy => policy.RequireClaim(ClaimTypes.Role, "Administrador"));
-                options.AddPolicy("Empleado", policy => policy.RequireClaim(ClaimTypes.Role, "Empleado"));
+                options.AddPolicy("Empleado", policy => policy.RequireClaim(ClaimTypes.Role, "Empleado", "Administrador"));
             });
             services.AddMvc();
             services.AddSignalR();//añade signalR
@@ -58,13 +58,14 @@ namespace LilloLSInmobiliaria
 
              services.AddTransient<IRepositorio<Propietario>, RepositorioPropietario>();
              services.AddTransient<IRepositorioPropietario, RepositorioPropietario>();
-             //services.AddTransient<IRepositorio<Inquilino>, RepositorioInquilino>();
+             services.AddTransient<IRepositorioInquilino, RepositorioInquilino>();
              services.AddTransient<IRepositorio<Inmueble>, RepositorioInmueble>();
              services.AddTransient<IRepositorioInmueble, RepositorioInmueble>();
-             services.AddTransient<IRepositorio<Pago>, RepositorioPago>();
-             services.AddTransient<IRepositorioPago, RepositorioPago>();
-             services.AddTransient<IRepositorio<Contrato>, RepositorioContrato>();
-             services.AddTransient<IRepositorioContrato, RepositorioContrato>();
+             //AddTransient<IRepositorio<Pago>, RepositorioPago>();
+             //services.AddTransient<IRepositorioPago, RepositorioPago>();
+             services.AddTransient<IRepositorioGarante, RepositorioGarante>();
+            // services.AddTransient<IRepositorioContrato, RepositorioContrato>();
+             //services.AddTransient<IRepositorio<Contrato>, RepositorioContrato>();
              services.AddTransient<IRepositorio<Usuario>, RepositorioUsuario>();
              services.AddTransient<IRepositorioUsuario, RepositorioUsuario>();
 

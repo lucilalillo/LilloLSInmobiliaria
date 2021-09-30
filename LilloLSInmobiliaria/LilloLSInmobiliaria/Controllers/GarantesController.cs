@@ -23,7 +23,7 @@ namespace LilloLSInmobiliaria.Controllers
 
 
         // GET: GarantesController
-        [Authorize(Policy = "Empleado")]
+        [Authorize]
         public ActionResult Index()
         {
             try
@@ -41,7 +41,7 @@ namespace LilloLSInmobiliaria.Controllers
         }
 
         // GET: GarantesController/Details/5
-        [Authorize(Policy = "Empleado")]
+        [Authorize]
         public ActionResult Details(int id)
         {
             Garante g = new Garante();
@@ -59,7 +59,7 @@ namespace LilloLSInmobiliaria.Controllers
         // POST: GarantesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = "Empleado")]
+        [Authorize]
         public ActionResult Create(Garante g)
         {
             try
@@ -74,7 +74,7 @@ namespace LilloLSInmobiliaria.Controllers
         }
 
         // GET: GarantesController/Edit/5
-        [Authorize(Policy = "Administrador")]
+        [Authorize]
         public ActionResult Edit(int id)
         {
             var i = repo.ObtenerPorId(id);
@@ -88,7 +88,7 @@ namespace LilloLSInmobiliaria.Controllers
         // POST: GarantesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = "Administrador")]
+        [Authorize]
         public ActionResult Edit(int id, IFormCollection collection)
         {
             Garante i = null;
@@ -128,7 +128,6 @@ namespace LilloLSInmobiliaria.Controllers
         // POST: GarantesController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Garante i)
         {
             try

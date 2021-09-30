@@ -216,5 +216,47 @@ namespace LilloLSInmobiliaria.Models
             return res;
         }
 
+        /*public IList<Inmueble> ObtenerInmueblesPorPropietario(int id) {
+            IList<Inmueble> res = new List<Inmueble>();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string sql = $" SELECT i.Id, Direccion, CantAmbientes, Uso, Tipo, Precio, Estado, PropietarioId, " +
+                    "p.Nombre, p.Apellido " +
+                    " FROM Inmuebles i INNER JOIN Propietarios p ON i.PropietarioId = p.Id " +
+                    $" WHERE i.Id=@id";
+                using (SqlCommand command = new SqlCommand(sql, connection))
+                {
+                    command.CommandType = CommandType.Text;
+                    command.Parameters.Add("@id", SqlDbType.Int).Value = id;
+                    connection.Open();
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Inmueble i = new Inmueble
+                        {
+                            Id = reader.GetInt32(0),
+                            Direccion = reader.GetString(1),
+                            CantAmbientes = reader.GetInt32(2),
+                            Uso = reader.GetString(3),
+                            Tipo = reader.GetString(4),
+                            Precio = reader.GetDecimal(5),
+                            Estado = reader.GetBoolean(6),
+                            PropietarioId = reader.GetInt32(7),
+                            Prop = new Propietario
+                            {
+                                Id = reader.GetInt32(7),
+                                Nombre = reader.GetString(8),
+                                Apellido = reader.GetString(9)
+                            }
+
+                        };
+                        res.Add(i);
+                    }
+                    connection.Close();
+                }
+            }
+            return res;
+        }*/
+
     }
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace LilloLSInmobiliaria.Models
 {
-    public class RepositorioGarante : RepositorioBase
+    public class RepositorioGarante : RepositorioBase, IRepositorioGarante
     {
 		public RepositorioGarante(IConfiguration config) : base(config)
 		{

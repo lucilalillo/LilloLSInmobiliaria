@@ -14,16 +14,19 @@ namespace LilloLSInmobiliaria.Controllers
     public class PropietariosController : Controller
     {
         private readonly IRepositorioPropietario repo;
+        private readonly IRepositorioInmueble repoInmu;
         private readonly IConfiguration config;
 
-        public PropietariosController(IRepositorioPropietario repo, IConfiguration config)
+
+        public PropietariosController(IRepositorioPropietario repo, IRepositorioInmueble repoInmu, IConfiguration config)
         {
             this.config = config;
             this.repo = repo;
+            this.repoInmu = repoInmu;
         }
 
         // GET: PropietariosController
-        [Authorize(Policy = "Empleado")]
+        [Authorize]
         public ActionResult Index()
         {
             try
@@ -42,7 +45,7 @@ namespace LilloLSInmobiliaria.Controllers
         }
 
         // GET: PropietariosController/Details/5
-        [Authorize(Policy = "Empleado")]
+        [Authorize]
         public ActionResult Details(int id)
         {
             Propietario p = new Propietario();
@@ -59,7 +62,7 @@ namespace LilloLSInmobiliaria.Controllers
         // POST: PropietariosController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = "Empleado")]
+        [Authorize]
         public ActionResult Create(Propietario p)
         {
             try
@@ -88,7 +91,7 @@ namespace LilloLSInmobiliaria.Controllers
         // POST: PropietariosController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = "Empleado")]
+        [Authorize]
         public ActionResult Edit(int id, IFormCollection collection)
         {
             Propietario p = null;
@@ -128,7 +131,6 @@ namespace LilloLSInmobiliaria.Controllers
         // POST: PropietariosController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Policy = "Administrador")]
         public ActionResult Delete(int id, Propietario p)
         {
             try

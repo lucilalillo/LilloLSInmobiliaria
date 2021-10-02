@@ -32,6 +32,8 @@ namespace LilloLSInmobiliaria.Controllers
         [Authorize]
         public ActionResult Index()
         {
+            ViewBag.Inmueble = repoInmueble.ObtenerTodos();
+            ViewBag.Inquilino = repoInq.ObtenerTodos();
             var lista = repo.ObtenerTodos();
             if (TempData.ContainsKey("Id"))
                 ViewBag.Id = TempData["Id"];

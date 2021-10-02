@@ -17,6 +17,19 @@
     }
 
 }
+@{
+    ViewData["Title"] = "Crear";
+    Contrato c = (Contrato)ViewBag.Contrato;
+}
+@{
+    ViewData["Title"] = "Crear";
+    Inmueble inmu = (Inmueble)ViewBag.Inmueble;
+}
+@{
+    ViewData["Title"] = "Crear";
+    Inquilino inq = (Inquilino)ViewBag.Inquilino;
+}
+
 
 <h1>Crear Nuevo Pago</h1>
 
@@ -27,28 +40,29 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="NumPago" class="control-label"></label>
-                <input asp-for="NumPago" class="form-control" />
-                <span asp-validation-for="NumPago" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="FechaPago" class="control-label"></label>
                 <input asp-for="FechaPago" class="form-control" />
                 <span asp-validation-for="FechaPago" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Importe" class="control-label"></label>
-                <input asp-for="Importe" class="form-control" />
+                <input asp-for="@c.Monto" class="form-control" />
                 <span asp-validation-for="Importe" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="contrato.Id" class="control-label"></label>
-                <select class="form-control" name="contrato.Id">
-                    @foreach (var item in (IList<Contrato>)ViewBag.Contratos)
-                    {
-                        <option value="@item.Id"> @(item.Id)</option>
-                    }
-                </select>
+                <input asp-for="@c.Id" class="form-control" />
+                <span asp-validation-for="contrato.Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="contrato.InmuebleId" class="control-label"></label>
+                <input asp-for="@inmu.Direccion" class="form-control" />
+                <span asp-validation-for="contrato.InmuebleId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="contrato.InquilinoId" class="control-label"></label>
+                <input asp-for="@inq.Apellido" class="form-control" />
+                <span asp-validation-for="contrato.InquilinoId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Guardar" class="btn btn-primary" />

@@ -36,10 +36,10 @@ namespace LilloLSInmobiliaria.Models
 
         public bool Estado { get; set; }
 
-        public override string ToString()
+        /*public override string ToString()
         {
             return $"{Prop.Nombre} {Prop.Apellido} {Direccion} {CantAmbientes} {Uso} {Tipo} {Precio} {Estado}";
-        }
+        }*/
 
     }
 }

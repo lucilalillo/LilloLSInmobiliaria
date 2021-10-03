@@ -24,6 +24,7 @@ namespace LilloLSInmobiliaria.Models
         [DisplayName("Código de Contrato")]
         public int ContratoId { get; set; }
 
+        [DisplayName("Datos del Contrato")]
         public Contrato contrato { get; set; }
     }
 }

@@ -58,10 +58,13 @@ namespace LilloLSInmobiliaria.Controllers
         [Authorize]
         public ActionResult Create(int id)
         {
-            Contrato c = repoCon.ObtenerPorId(id);
             ViewBag.Contrato = repoCon.ObtenerPorId(id);
-            ViewBag.Inmueble = repoInmueble.ObtenerPorId(c.InmuebleId);
-            ViewBag.Inquilino = repoInq.ObtenerPorId(c.InquilinoId);
+            ViewBag.Contratos = repoCon.ObtenerTodos();
+            IList<Pago> lista = repo.ObtenerTodosPorIdContrato(id);
+            ViewBag.tamaño = lista.Count + 1;
+            Contrato c = repoCon.ObtenerPorId(id);
+            ViewBag.monto = c.Monto;
+            ViewBag.Inmueble = repoInmueble.ObtenerPorId(id);
             return View();
         }
 

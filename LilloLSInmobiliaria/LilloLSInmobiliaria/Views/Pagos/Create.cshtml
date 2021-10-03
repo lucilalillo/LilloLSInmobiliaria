@@ -4,32 +4,11 @@
     ViewData["Title"] = "Create";
 }
 @{
-    if (TempData["Error"] != null)
-    {
-        <p>@TempData["Error"]</p>
-    }
-
-}
-@{
-    if (TempData["Mensaje"] != null)
-    {
-        <p>@TempData["Mensaje"]</p>
-    }
-
-}
-@{
-    ViewData["Title"] = "Crear";
+    ViewData["Title"] = "Create";
     Contrato c = (Contrato)ViewBag.Contrato;
-}
-@{
-    ViewData["Title"] = "Crear";
+    IList<Pago> listaPagos = ViewBag.Pagos;
     Inmueble inmu = (Inmueble)ViewBag.Inmueble;
 }
-@{
-    ViewData["Title"] = "Crear";
-    Inquilino inq = (Inquilino)ViewBag.Inquilino;
-}
-
 
 <h1>Crear Nuevo Pago</h1>
 
@@ -40,30 +19,31 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
+                <label asp-for="NumPago" class="control-label"></label>
+                <input asp-for="NumPago" class="form-control" value="@ViewBag.tamaño" />
+                <span asp-validation-for="NumPago" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="FechaPago" class="control-label"></label>
                 <input asp-for="FechaPago" class="form-control" />
                 <span asp-validation-for="FechaPago" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Importe" class="control-label"></label>
-                <input asp-for="@c.Monto" class="form-control" />
+                <input asp-for="Importe" class="form-control" value="@ViewBag.monto" />
                 <span asp-validation-for="Importe" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="contrato.Id" class="control-label"></label>
-                <input asp-for="@c.Id" class="form-control" />
-                <span asp-validation-for="contrato.Id" class="text-danger"></span>
+            <div class="inputBox">
+                <select class="selectpicker form-control " data-live-search="true" name="ContratoId">
+                    @foreach (var item in (IList<Contrato>)ViewBag.Contratos)
+                    {
+                        <option value="@item.Id">@("Apellido Inquilino: "+item.Inquilino.Apellido+" Direccion Inmueble: "+ item.Inmueble.Direccion)</option>
+                    }
+                </select>
+                <span asp-validation-for="Id" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="contrato.InmuebleId" class="control-label"></label>
-                <input asp-for="@inmu.Direccion" class="form-control" />
-                <span asp-validation-for="contrato.InmuebleId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="contrato.InquilinoId" class="control-label"></label>
-                <input asp-for="@inq.Apellido" class="form-control" />
-                <span asp-validation-for="contrato.InquilinoId" class="text-danger"></span>
-            </div>
+
+            <br />
             <div class="form-group">
                 <input type="submit" value="Guardar" class="btn btn-primary" />
             </div>

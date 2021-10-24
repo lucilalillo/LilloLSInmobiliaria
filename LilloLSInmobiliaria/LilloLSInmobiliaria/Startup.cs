@@ -1,6 +1,7 @@
 using LilloLSInmobiliaria.Models;
 using LinqToDB;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -8,6 +9,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +30,26 @@ namespace LilloLSInmobiliaria
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>//la api web valida con token
+            {
+                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = config["TokenAuthentication:Issuer"],
+                    ValidAudience = config["TokenAuthentication:Audience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.ASCII.GetBytes(
+                        config["TokenAuthentication:SecretKey"])),
+                };
+            });
+            services.AddAuthorization(options =>
+            {
+                //options.AddPolicy("Empleado", policy => policy.RequireClaim(ClaimTypes.Role, "Administrador", "Empleado"));
+                options.AddPolicy("Admin", policy => policy.RequireRole("SuperAdministrador"));
+            });
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>//el sitio web valida con cookie
                 {
@@ -68,6 +91,10 @@ namespace LilloLSInmobiliaria
              //services.AddTransient<IRepositorio<Contrato>, RepositorioContrato>();
              services.AddTransient<IRepositorio<Usuario>, RepositorioUsuario>();
              services.AddTransient<IRepositorioUsuario, RepositorioUsuario>();
+
+            services.AddDbContext<Models.DataContext>(
+               options => options.UseSqlServer(config["ConnectionStrings:DefaultConnection"])
+           );
 
 
         }

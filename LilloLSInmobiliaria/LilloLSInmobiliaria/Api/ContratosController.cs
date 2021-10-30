@@ -6,102 +6,43 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LilloLSInmobiliaria.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LilloLSInmobiliaria.Api
 {
     [Route("api/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     public class ContratosController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly DataContext contexto;
 
         public ContratosController(DataContext context)
         {
-            _context = context;
+            contexto = context;
         }
 
         // GET: api/Contratos
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Contrato>>> GetContratos()
+        [HttpGet("ObtenerContratos")]
+        public async Task<ActionResult> GetContratos()
         {
-            return await _context.Contratos.ToListAsync();
-        }
-
-        // GET: api/Contratos/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Contrato>> GetContrato(int id)
-        {
-            var contrato = await _context.Contratos.FindAsync(id);
-
-            if (contrato == null)
-            {
-                return NotFound();
-            }
-
-            return contrato;
-        }
-
-        // PUT: api/Contratos/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutContrato(int id, Contrato contrato)
-        {
-            if (id != contrato.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(contrato).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                var usuario = User.Identity.Name;
+                var fecha_actual = DateTime.Now;
+
+                var lista = await contexto.Contratos
+                                .Include(x => x.Inquilino)
+                                .Include(x => x.Inmueble)
+                                .Where(x => x.Inmueble.Prop.Mail == usuario && x.FecInicio <= fecha_actual && x.FecFin >= fecha_actual)
+                                .ToListAsync();
+                return Ok(lista);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!ContratoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(ex.Message.ToString());
             }
-
-            return NoContent();
-        }
-
-        // POST: api/Contratos
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Contrato>> PostContrato(Contrato contrato)
-        {
-            _context.Contratos.Add(contrato);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetContrato", new { id = contrato.Id }, contrato);
-        }
-
-        // DELETE: api/Contratos/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteContrato(int id)
-        {
-            var contrato = await _context.Contratos.FindAsync(id);
-            if (contrato == null)
-            {
-                return NotFound();
-            }
-
-            _context.Contratos.Remove(contrato);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool ContratoExists(int id)
-        {
-            return _context.Contratos.Any(e => e.Id == id);
         }
     }
 }

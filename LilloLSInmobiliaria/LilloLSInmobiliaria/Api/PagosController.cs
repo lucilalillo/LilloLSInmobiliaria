@@ -13,95 +13,35 @@ namespace LilloLSInmobiliaria.Api
     [ApiController]
     public class PagosController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly DataContext contexto;
 
         public PagosController(DataContext context)
         {
-            _context = context;
+            contexto = context;
         }
 
-        // GET: api/Pagos
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Pago>>> GetPagos()
-        {
-            return await _context.Pagos.ToListAsync();
-        }
-
-        // GET: api/Pagos/5
+        // GET
+        //este metodo se usa en la vista de Contratos en el boton pagos
+        //me devuelve la lista de pagos de un contrato vigente
         [HttpGet("{id}")]
-        public async Task<ActionResult<Pago>> GetPago(int id)
+        public async Task<ActionResult<List<Pago>>> GetPagos(int id)
         {
-            var pago = await _context.Pagos.FindAsync(id);
-
-            if (pago == null)
-            {
-                return NotFound();
-            }
-
-            return pago;
-        }
-
-        // PUT: api/Pagos/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPago(int id, Pago pago)
-        {
-            if (id != pago.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(pago).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                var pagos = await contexto.Pagos.Include(x => x.contrato).Where(x =>
+                     x.ContratoId == id
+                    ).ToListAsync();
+
+                return Ok(pagos);
+
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!PagoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(ex.Message.ToString());
+
             }
-
-            return NoContent();
         }
 
-        // POST: api/Pagos
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Pago>> PostPago(Pago pago)
-        {
-            _context.Pagos.Add(pago);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetPago", new { id = pago.Id }, pago);
         }
-
-        // DELETE: api/Pagos/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePago(int id)
-        {
-            var pago = await _context.Pagos.FindAsync(id);
-            if (pago == null)
-            {
-                return NotFound();
-            }
-
-            _context.Pagos.Remove(pago);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool PagoExists(int id)
-        {
-            return _context.Pagos.Any(e => e.Id == id);
-        }
-    }
 }

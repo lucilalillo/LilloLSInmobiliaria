@@ -6,102 +6,106 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using LilloLSInmobiliaria.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration;
 
 namespace LilloLSInmobiliaria.Api
 {
     [Route("api/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     public class InmueblesController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly DataContext contexto;
+        private readonly IConfiguration config;
 
-        public InmueblesController(DataContext context)
+        public InmueblesController(DataContext context, IConfiguration config)
         {
-            _context = context;
-        }
-
-        // GET: api/Inmuebles
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Inmueble>>> GetInmuebles()
-        {
-            return await _context.Inmuebles.ToListAsync();
+            contexto = context;
+            this.config = config;
         }
 
         // GET: api/Inmuebles/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Inmueble>> GetInmueble(int id)
+        [HttpGet]
+        //este metodo se usa en la vista Inmuebles.
+        //Me devuelve una lista de todos los inmuebles del usuario actual
+        public async Task<ActionResult<Inmueble>> GetListaInmuebles()
         {
-            var inmueble = await _context.Inmuebles.FindAsync(id);
-
-            if (inmueble == null)
-            {
-                return NotFound();
-            }
-
-            return inmueble;
-        }
-
-        // PUT: api/Inmuebles/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutInmueble(int id, Inmueble inmueble)
-        {
-            if (id != inmueble.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(inmueble).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                var usuario = User.Identity.Name;
+                return Ok(contexto.Inmuebles.Include(e => e.Prop).Where(e => e.Prop.Mail == usuario));
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
-                if (!InmuebleExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(ex.Message);
             }
-
-            return NoContent();
         }
 
-        // POST: api/Inmuebles
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Inmueble>> PostInmueble(Inmueble inmueble)
+        // GET api/Inmuebles/5
+        //este metodo se usa en la vista detalle inmueble
+        //y me devuelve los datos de un inmueble
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetInmueblePorId(int id)
         {
-            _context.Inmuebles.Add(inmueble);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetInmueble", new { id = inmueble.Id }, inmueble);
-        }
-
-        // DELETE: api/Inmuebles/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteInmueble(int id)
-        {
-            var inmueble = await _context.Inmuebles.FindAsync(id);
-            if (inmueble == null)
+            try
             {
-                return NotFound();
+                var usuario = User.Identity.Name;
+                return Ok(contexto.Inmuebles.Include(e => e.Prop).Where(e => e.Prop.Mail == usuario).Single(e => e.Id == id));
             }
-
-            _context.Inmuebles.Remove(inmueble);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        private bool InmuebleExists(int id)
+        //Put api/Inmuebles/EditarEstado/5
+        //Para cambiar el estado entre disponible y no disponible
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditarEstado(int id)
         {
-            return _context.Inmuebles.Any(e => e.Id == id);
+            try
+            {
+                var usuario = User.Identity.Name;
+                var i = contexto.Inmuebles.Include(x => x.Prop)
+                    .FirstOrDefault(x => x.Id == id && x.Prop.Mail == usuario);
+                if (i != null) { 
+                    i.Estado = !i.Estado;
+                    contexto.Inmuebles.Update(i);
+                    await contexto.SaveChangesAsync();
+                    return Ok(i);
+                }
+                return BadRequest();
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message.ToString());
+            }
+        }
+
+       //este metodo se usa en la vista Inquilinos
+       //Me devuelve una lista con los inmuebles alquilados del usuario actual
+        [HttpGet("InmueblesConContrato")]
+        public async Task<IActionResult> GetInmueblesAlquilados()
+        {
+            try
+            {
+                var usuario = User.Identity.Name;
+                var fecha_actual = DateTime.Now;
+
+                var query = from inmu in contexto.Inmuebles
+                              join cont in contexto.Contratos
+                                on inmu.Id equals cont.InmuebleId
+                            where cont.FecInicio <= fecha_actual && cont.FecFin >= fecha_actual && usuario == inmu.Prop.Mail
+                            select cont;
+             return Ok(query);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

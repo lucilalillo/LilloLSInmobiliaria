@@ -91,15 +91,6 @@ namespace LilloLSInmobiliaria.Controllers
                 ViewBag.StackTrace = ex.StackTrace;
                 return View(p);
             }
-            /* try
-            {
-                repo.Alta(p);
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                return View();
-            }*/
         }
 
         // GET: PropietariosController/Edit/5

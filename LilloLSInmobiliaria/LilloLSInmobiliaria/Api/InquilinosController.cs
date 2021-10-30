@@ -26,94 +26,33 @@ namespace LilloLSInmobiliaria.Api
             this.config = config;
         }
 
-        // GET: api/Inquilinos
-        [HttpGet]
-        public async Task<ActionResult<Inquilino>> GetInquilinos()
-        {
-            try {
-                var usuario = User.Identity.Name;
-                return await contexto.Inquilinos.SingleOrDefaultAsync(x => x.Mail == usuario);
-            }
-            catch (Exception ex) {
-                return BadRequest(ex);
-            }
-        }
-
-        // GET: api/Inquilinos/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Inquilino>> GetInquilino(int id)
+        // GET api/Inquilinos/
+        [HttpGet("ObtenerInquilino")]
+        public async Task<IActionResult> GetInquilino([FromBody]Inmueble inmueble)
         {
             try
             {
-                return Ok(contexto.Inquilinos.SingleOrDefault(x => x.Id == id));
+                var usuario = User.Identity.Name;
+                var fecha_actual = DateTime.Now;
+
+                var query = from cont in contexto.Contratos
+                            join inmue in contexto.Inmuebles
+                                on cont.InmuebleId equals inmue.Id
+                            join inquilino in contexto.Inquilinos
+                                on cont.InquilinoId equals inquilino.Id
+                            where cont.FecInicio <= fecha_actual
+                                    && cont.FecFin >= fecha_actual
+                                    && inmue.Id == inmueble.Id
+                            select inquilino;
+
+                return Ok(query);
+
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message.ToString());
             }
         }
 
-        // PUT: api/Inquilinos/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutInquilino(int id, Inquilino inquilino)
-        {
-            if (id != inquilino.Id)
-            {
-                return BadRequest();
-            }
-
-            contexto.Entry(inquilino).State = EntityState.Modified;
-
-            try
-            {
-                await contexto.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!InquilinoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Inquilinos
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Inquilino>> PostInquilino(Inquilino inquilino)
-        {
-            contexto.Inquilinos.Add(inquilino);
-            await contexto.SaveChangesAsync();
-
-            return CreatedAtAction("GetInquilino", new { id = inquilino.Id }, inquilino);
-        }
-
-        // DELETE: api/Inquilinos/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteInquilino(int id)
-        {
-            var inquilino = await contexto.Inquilinos.FindAsync(id);
-            if (inquilino == null)
-            {
-                return NotFound();
-            }
-
-            contexto.Inquilinos.Remove(inquilino);
-            await contexto.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool InquilinoExists(int id)
-        {
-            return contexto.Inquilinos.Any(e => e.Id == id);
-        }
     }
 }

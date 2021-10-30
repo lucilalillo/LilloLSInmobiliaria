@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using LilloLSInmobiliaria.Models;
 
 namespace LilloLSInmobiliaria.Api
 {
@@ -12,36 +13,95 @@ namespace LilloLSInmobiliaria.Api
     [ApiController]
     public class ContratosController : ControllerBase
     {
-        // GET: api/<ContratosController>
+        private readonly DataContext _context;
+
+        public ContratosController(DataContext context)
+        {
+            _context = context;
+        }
+
+        // GET: api/Contratos
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<Contrato>>> GetContratos()
         {
-            return new string[] { "value1", "value2" };
+            return await _context.Contratos.ToListAsync();
         }
 
-        // GET api/<ContratosController>/5
+        // GET: api/Contratos/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<Contrato>> GetContrato(int id)
         {
-            return "value";
+            var contrato = await _context.Contratos.FindAsync(id);
+
+            if (contrato == null)
+            {
+                return NotFound();
+            }
+
+            return contrato;
         }
 
-        // POST api/<ContratosController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<ContratosController>/5
+        // PUT: api/Contratos/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> PutContrato(int id, Contrato contrato)
         {
+            if (id != contrato.Id)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(contrato).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ContratoExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
-        // DELETE api/<ContratosController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        // POST: api/Contratos
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Contrato>> PostContrato(Contrato contrato)
         {
+            _context.Contratos.Add(contrato);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetContrato", new { id = contrato.Id }, contrato);
+        }
+
+        // DELETE: api/Contratos/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteContrato(int id)
+        {
+            var contrato = await _context.Contratos.FindAsync(id);
+            if (contrato == null)
+            {
+                return NotFound();
+            }
+
+            _context.Contratos.Remove(contrato);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private bool ContratoExists(int id)
+        {
+            return _context.Contratos.Any(e => e.Id == id);
         }
     }
 }

@@ -1,13 +1,11 @@
-﻿using LilloLSInmobiliaria.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using LilloLSInmobiliaria.Models;
 
 namespace LilloLSInmobiliaria.Api
 {
@@ -15,107 +13,95 @@ namespace LilloLSInmobiliaria.Api
     [ApiController]
     public class InmueblesController : ControllerBase
     {
-        private readonly Models.DataContext contexto;
-        private readonly IConfiguration config;
+        private readonly DataContext _context;
 
-        public InmueblesController(DataContext contexto, IConfiguration config)
+        public InmueblesController(DataContext context)
         {
-            this.contexto = contexto;
-            this.config = config;
+            _context = context;
         }
 
-        // GET: api/<InmueblesController>
+        // GET: api/Inmuebles
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<ActionResult<IEnumerable<Inmueble>>> GetInmuebles()
         {
-            try
-            {
-                var usuario = User.Identity.Name;
-                var lista = await contexto.Inmuebles
-                    .Include(x => x.Prop)
-                    .Where(x => x.Prop.Mail == usuario).ToListAsync();
-                return Ok(lista);
-
-            }
-            catch (Exception ex) {
-                return BadRequest(ex);
-            }
+            return await _context.Inmuebles.ToListAsync();
         }
 
-        // GET api/<InmueblesController>/5
+        // GET: api/Inmuebles/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<ActionResult<Inmueble>> GetInmueble(int id)
         {
-            try {
-                return Ok(contexto.Inmuebles.SingleOrDefault(x => x.Id == id));
+            var inmueble = await _context.Inmuebles.FindAsync(id);
+
+            if (inmueble == null)
+            {
+                return NotFound();
             }
-            catch (Exception ex) {
-                return BadRequest(ex);
-            }
+
+            return inmueble;
         }
 
-        // POST api/<InmueblesController>
-        [HttpPost]
-        public async Task<IActionResult> Post(Inmueble entidad)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    entidad.PropietarioId = contexto.Propietarios.Single(e => e.Mail == User.Identity.Name).Id;
-                    contexto.Inmuebles.Add(entidad);
-                    contexto.SaveChanges();
-                    return CreatedAtAction(nameof(Get), new { id = entidad.Id }, entidad);
-                }
-                return BadRequest();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }
-        }
-
-        // PUT api/<InmueblesController>/5
+        // PUT: api/Inmuebles/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id)
+        public async Task<IActionResult> PutInmueble(int id, Inmueble inmueble)
         {
-            try
+            if (id != inmueble.Id)
             {
-                var usuario = User.Identity.Name;
-                var inmueble = contexto.Inmuebles
-                    .Include(x => x.Prop).FirstOrDefault(x => x.Id == id);
-                    if (inmueble != null) {
-                    inmueble.Estado = !inmueble.Estado;
-                    contexto.Inmuebles.Update(inmueble);
-                    await contexto.SaveChangesAsync();
-                    return Ok(inmueble);
-                }
                 return BadRequest();
             }
-            catch (Exception ex) {
-                return BadRequest(ex);
-            }
-        }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
+            _context.Entry(inmueble).State = EntityState.Modified;
+
             try
             {
-                var entidad = contexto.Inmuebles.Include(e => e.Prop).FirstOrDefault(e => e.Id == id && e.Prop.Mail == User.Identity.Name);
-                var contrato = contexto.Contratos.Include(e => e.Inmueble).FirstOrDefault(e => e.InmuebleId == id);
-                if (entidad != null && contrato == null)
-                {
-                    contexto.Inmuebles.Remove(entidad);
-                    contexto.SaveChanges();
-                    return Ok("Se eliminó correctamente");
-                }
-                return BadRequest("El inmueble tiene un contrato vigente");
+                await _context.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch (DbUpdateConcurrencyException)
             {
-                return BadRequest(ex);
+                if (!InmuebleExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
             }
+
+            return NoContent();
+        }
+
+        // POST: api/Inmuebles
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Inmueble>> PostInmueble(Inmueble inmueble)
+        {
+            _context.Inmuebles.Add(inmueble);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetInmueble", new { id = inmueble.Id }, inmueble);
+        }
+
+        // DELETE: api/Inmuebles/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteInmueble(int id)
+        {
+            var inmueble = await _context.Inmuebles.FindAsync(id);
+            if (inmueble == null)
+            {
+                return NotFound();
+            }
+
+            _context.Inmuebles.Remove(inmueble);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private bool InmuebleExists(int id)
+        {
+            return _context.Inmuebles.Any(e => e.Id == id);
         }
     }
 }

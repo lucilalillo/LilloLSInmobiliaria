@@ -1,5 +1,6 @@
 ﻿using LilloLSInmobiliaria.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -62,10 +63,35 @@ namespace LilloLSInmobiliaria.Controllers
         // POST: PropietariosController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
+       
         public ActionResult Create(Propietario p)
         {
             try
+            {
+                if (ModelState.IsValid)
+                {
+                    string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                        password: p.ClaveProp,
+                        salt: System.Text.Encoding.ASCII.GetBytes(config["Salt"]),
+                        prf: KeyDerivationPrf.HMACSHA1,
+                        iterationCount: 1000,
+                        numBytesRequested: 256 / 8));
+                    p.ClaveProp = hashed;
+                    repo.Alta(p);
+                    TempData["Id"] = p.Id;
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                    return View(p);
+
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                ViewBag.StackTrace = ex.StackTrace;
+                return View(p);
+            }
+            /* try
             {
                 repo.Alta(p);
                 return RedirectToAction(nameof(Index));
@@ -73,7 +99,7 @@ namespace LilloLSInmobiliaria.Controllers
             catch (Exception ex)
             {
                 return View();
-            }
+            }*/
         }
 
         // GET: PropietariosController/Edit/5

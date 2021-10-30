@@ -1,47 +1,119 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using LilloLSInmobiliaria.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration;
 
 namespace LilloLSInmobiliaria.Api
 {
     [Route("api/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     public class InquilinosController : ControllerBase
     {
-        // GET: api/<InquilinosController>
+        private readonly DataContext contexto;
+        private readonly IConfiguration config;
+
+        public InquilinosController(DataContext context, IConfiguration config)
+        {
+            contexto = context;
+            this.config = config;
+        }
+
+        // GET: api/Inquilinos
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<Inquilino>> GetInquilinos()
         {
-            return new string[] { "value1", "value2" };
+            try {
+                var usuario = User.Identity.Name;
+                return await contexto.Inquilinos.SingleOrDefaultAsync(x => x.Mail == usuario);
+            }
+            catch (Exception ex) {
+                return BadRequest(ex);
+            }
         }
 
-        // GET api/<InquilinosController>/5
+        // GET: api/Inquilinos/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<ActionResult<Inquilino>> GetInquilino(int id)
         {
-            return "value";
+            try
+            {
+                return Ok(contexto.Inquilinos.SingleOrDefault(x => x.Id == id));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
-        // POST api/<InquilinosController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<InquilinosController>/5
+        // PUT: api/Inquilinos/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> PutInquilino(int id, Inquilino inquilino)
         {
+            if (id != inquilino.Id)
+            {
+                return BadRequest();
+            }
+
+            contexto.Entry(inquilino).State = EntityState.Modified;
+
+            try
+            {
+                await contexto.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!InquilinoExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
-        // DELETE api/<InquilinosController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        // POST: api/Inquilinos
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Inquilino>> PostInquilino(Inquilino inquilino)
         {
+            contexto.Inquilinos.Add(inquilino);
+            await contexto.SaveChangesAsync();
+
+            return CreatedAtAction("GetInquilino", new { id = inquilino.Id }, inquilino);
+        }
+
+        // DELETE: api/Inquilinos/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteInquilino(int id)
+        {
+            var inquilino = await contexto.Inquilinos.FindAsync(id);
+            if (inquilino == null)
+            {
+                return NotFound();
+            }
+
+            contexto.Inquilinos.Remove(inquilino);
+            await contexto.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private bool InquilinoExists(int id)
+        {
+            return contexto.Inquilinos.Any(e => e.Id == id);
         }
     }
 }

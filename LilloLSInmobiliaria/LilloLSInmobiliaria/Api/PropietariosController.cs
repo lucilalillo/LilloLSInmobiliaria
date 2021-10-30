@@ -63,7 +63,7 @@ namespace LilloLSInmobiliaria.Api
             }
         }
 
-        // GET api/<controller>/GetAll
+      /*  // GET api/<controller>/GetAll
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAll()
         {
@@ -75,22 +75,25 @@ namespace LilloLSInmobiliaria.Api
             {
                 return BadRequest(ex);
             }
-        }
+        } */
 
         // POST api/<controller>/login
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromForm] LoginView loginView)
+        public async Task<IActionResult> Login([FromForm] Login login)
         {
+            Propietario p = null;
             try
             {
+                p = await contexto.Propietarios.FirstOrDefaultAsync(x => x.Mail == login.Email);
+
                 string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                    password: loginView.Clave,
+                    password: login.Clave,
                     salt: System.Text.Encoding.ASCII.GetBytes(config["Salt"]),
                     prf: KeyDerivationPrf.HMACSHA1,
                     iterationCount: 1000,
                     numBytesRequested: 256 / 8));
-                var p = await contexto.Propietarios.FirstOrDefaultAsync(x => x.Mail == loginView.Usuario);
+
                 if (p == null || p.ClaveProp != hashed)
                 {
                     return BadRequest("Nombre de usuario o clave incorrecta");
@@ -119,7 +122,7 @@ namespace LilloLSInmobiliaria.Api
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message.ToString());
             }
         }
 
@@ -159,7 +162,25 @@ namespace LilloLSInmobiliaria.Api
             }
         }
 
-        // PUT api/<PropietariosController>/5
+        [HttpPut]
+        public async Task<IActionResult> Put([FromBody]Propietario entidad){
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    contexto.Propietarios.Update(entidad);
+                    await contexto.SaveChangesAsync();
+                    return Ok(entidad);
+                }
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+       /* // PUT api/<PropietariosController>/5
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromForm] Propietario entidad)
         {
@@ -192,7 +213,7 @@ namespace LilloLSInmobiliaria.Api
             {
                 return BadRequest(ex);
             }
-        }
+        }*/
 
         //PUT api/<controller>
         [HttpPut("editar/{id}")]

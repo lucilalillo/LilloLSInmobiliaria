@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.SignalR;
 
 namespace LilloLSInmobiliaria
 {
@@ -30,7 +31,14 @@ namespace LilloLSInmobiliaria
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>//el sitio web valida con cookie
+                {
+                    options.LoginPath = "/Usuarios/Login";
+                    options.LogoutPath = "/Usuarios/Logout";
+                    options.AccessDeniedPath = "/Home/Restringido";
+                })
+
             .AddJwtBearer(options =>//la api web valida con token
             {
                 options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
@@ -50,15 +58,6 @@ namespace LilloLSInmobiliaria
                 //options.AddPolicy("Empleado", policy => policy.RequireClaim(ClaimTypes.Role, "Administrador", "Empleado"));
                 options.AddPolicy("Admin", policy => policy.RequireRole("SuperAdministrador"));
             });
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(options =>//el sitio web valida con cookie
-                {
-                    options.LoginPath = "/Usuarios/Login";
-                    options.LogoutPath = "/Usuarios/Logout";
-                    options.AccessDeniedPath = "/Home/Restringido";
-
-                });
-
 
             services.AddAuthorization(options =>
             {
@@ -70,15 +69,13 @@ namespace LilloLSInmobiliaria
             services.AddMvc();
             services.AddSignalR();//añade signalR
                                   //IUserIdProvider permite cambiar el ClaimType usado para obtener el UserIdentifier en Hub
-                                  // services.AddSingleton<IUserIdProvider, UserIdProvider>();
+            services.AddSingleton<IUserIdProvider, DefaultUserIdProvider>();
             /*
             //SOLO PARA INYECCION DE DEPENDENCIAS
             Transient objects are always different; a new instance is provided to every controller and every service.
             Scoped objects are the same within a request, but different across different requests.
             Singleton objects are the same for every object and every request.
             */
-
-
              services.AddTransient<IRepositorio<Propietario>, RepositorioPropietario>();
              services.AddTransient<IRepositorioPropietario, RepositorioPropietario>();
              services.AddTransient<IRepositorioInquilino, RepositorioInquilino>();

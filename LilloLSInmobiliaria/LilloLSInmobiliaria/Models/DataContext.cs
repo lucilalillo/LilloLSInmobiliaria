@@ -17,13 +17,7 @@ namespace LilloLSInmobiliaria.Models
         public DbSet<Inmueble> Inmuebles { get; set; }
         public DbSet<Pago> Pagos { get; set;  }
         public DbSet<Contrato> Contratos { get; set; }
-
-        // public DbSet<Persona> Personas { get; set; }
-        // public DbSet<Pasatiempo> Pasatiempos { get; set; }
-        // public DbSet<PersonaPasatiempo> PersonaPasatiempos { get; set; }
-
-        //  public DbSet<Conectado> Conectados { get; set; }
-        public DbSet<Usuario> Usuarios { get; set; }
+        //public DbSet<Usuario> Usuarios { get; set; }
     }
 }
 

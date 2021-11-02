@@ -33,6 +33,7 @@ namespace LilloLSInmobiliaria.Api
 
 
         // GET: api/<PropietariosController>
+        //obtiene datos del propietario logueado
         [HttpGet]
         public async Task<ActionResult<Propietario>> Get()
         {
@@ -97,6 +98,7 @@ namespace LilloLSInmobiliaria.Api
         }
 
         //PUT api/Controller/5
+        //edita los datos del propietario logueado
         [HttpPut()]
         public async Task<IActionResult> Put([FromBody] Propietario p) {
             try

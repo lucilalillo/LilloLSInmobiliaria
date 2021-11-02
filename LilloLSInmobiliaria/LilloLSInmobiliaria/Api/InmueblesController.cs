@@ -9,6 +9,8 @@ using LilloLSInmobiliaria.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace LilloLSInmobiliaria.Api
 {
@@ -19,11 +21,13 @@ namespace LilloLSInmobiliaria.Api
     {
         private readonly DataContext contexto;
         private readonly IConfiguration config;
+        private readonly IWebHostEnvironment environment;
 
-        public InmueblesController(DataContext context, IConfiguration config)
+        public InmueblesController(DataContext context, IConfiguration config, IWebHostEnvironment environment)
         {
             contexto = context;
             this.config = config;
+            this.environment = environment;
         }
 
         // GET: api/Inmuebles/5
@@ -105,6 +109,56 @@ namespace LilloLSInmobiliaria.Api
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+
+        // POST api/<controller>
+        //este metodo envia la foto del inmueble
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] Inmueble entidad)
+        {
+            try
+            {
+                var direccion = entidad.Direccion;
+                var duenioId = User.Identity.Name;
+
+                if (entidad.Imagen.Length > 0)
+                {
+                    if (ModelState.IsValid)
+                    {
+                        entidad.Id = contexto.Propietarios.Single(e => e.Mail == User.Identity.Name).Id;
+ 
+                        var stream1 = new MemoryStream(Convert.FromBase64String(entidad.Imagen));
+                        IFormFile ImagenInmo = new FormFile(stream1, 0, stream1.Length, "inmueble", ".jpg");
+                        string wwwPath = environment.WebRootPath;
+                        string path = Path.Combine(wwwPath, "Uploads");
+                        if (!Directory.Exists(path))
+                        {
+                            Directory.CreateDirectory(path);
+                        }
+                        Random r = new Random();
+                        //Path.GetFileName(u.AvatarFile.FileName);//este nombre se puede repetir
+                        string fileName = "foto_"+entidad.Id+Path.GetExtension(entidad.ImagenFile.FileName);
+                        string pathCompleto = Path.Combine(path, fileName);
+
+                        entidad.Imagen = Path.Combine("/Uploads", fileName);
+                        using (FileStream stream = new FileStream(pathCompleto, FileMode.Create))
+                        {
+                            entidad.ImagenFile.CopyTo(stream);
+                        }
+                        
+                        contexto.Inmuebles.Add(entidad);
+                        contexto.SaveChanges();
+                        return CreatedAtAction(nameof(GetInmueblePorId), new { id = entidad.Id }, entidad);
+
+                    }
+                    return BadRequest(ModelState);
+                }
+                return BadRequest(Ok("Imagen no encontrada"));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message.ToString());
             }
         }
     }

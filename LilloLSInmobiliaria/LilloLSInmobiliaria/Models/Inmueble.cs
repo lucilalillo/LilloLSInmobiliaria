@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -36,10 +37,10 @@ namespace LilloLSInmobiliaria.Models
 
         public bool Estado { get; set; }
 
-        /*public override string ToString()
-        {
-            return $"{Prop.Nombre} {Prop.Apellido} {Direccion} {CantAmbientes} {Uso} {Tipo} {Precio} {Estado}";
-        }*/
+        public String Imagen { get; set; }
+
+        [NotMapped]
+        public  IFormFile ImagenFile { get; set; }
 
     }
 }

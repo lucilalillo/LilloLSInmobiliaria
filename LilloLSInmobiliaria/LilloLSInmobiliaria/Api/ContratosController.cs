@@ -24,20 +24,20 @@ namespace LilloLSInmobiliaria.Api
         }
 
         // GET: api/Contratos
-        [HttpGet("ObtenerContratos")]
-        public async Task<ActionResult> GetContratos()
+        [HttpGet("ObtenerContrato")]
+        public async Task<ActionResult> GetContrato()
         {
             try
             {
                 var usuario = User.Identity.Name;
                 var fecha_actual = DateTime.Now;
 
-                var lista = await contexto.Contratos
+                var con = await contexto.Contratos
                                 .Include(x => x.Inquilino)
                                 .Include(x => x.Inmueble)
                                 .Where(x => x.Inmueble.Prop.Mail == usuario && x.FecInicio <= fecha_actual && x.FecFin >= fecha_actual)
                                 .ToListAsync();
-                return Ok(lista);
+                return Ok(con);
             }
             catch (Exception ex)
             {

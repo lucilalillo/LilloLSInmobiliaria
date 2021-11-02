@@ -79,7 +79,7 @@ namespace LilloLSInmobiliaria.Models
 					command.Parameters.AddWithValue("@email", u.Email);
 					command.Parameters.AddWithValue("@rol", u.Rol);
 					command.Parameters.AddWithValue("@clave", u.Clave);
-					//command.Parameters.AddWithValue("@avatar", u.Avatar);			
+					command.Parameters.AddWithValue("@avatar", u.Avatar);			
 					command.Parameters.AddWithValue("@id", u.Id);
 					connection.Open();
 					res = command.ExecuteNonQuery();

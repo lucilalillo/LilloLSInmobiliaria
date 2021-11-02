@@ -54,5 +54,28 @@ namespace LilloLSInmobiliaria.Api
             }
         }
 
+        //este metodo se usa en la vista Inquilinos
+        //Me devuelve una lista con los inmuebles alquilados del usuario actual
+        [HttpGet("InmueblesConContrato")]
+        public async Task<IActionResult> GetInmueblesAlquilados()
+        {
+            try
+            {
+                var usuario = User.Identity.Name;
+                var fecha_actual = DateTime.Now;
+
+                var query = from inmu in contexto.Inmuebles
+                            join cont in contexto.Contratos
+                              on inmu.Id equals cont.InmuebleId
+                            where cont.FecInicio <= fecha_actual && cont.FecFin >= fecha_actual && usuario == inmu.Prop.Mail
+                            select cont;
+                return Ok(query);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

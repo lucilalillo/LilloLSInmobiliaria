@@ -24,24 +24,40 @@ namespace LilloLSInmobiliaria.Api
         }
 
         // GET: api/Contratos
-        [HttpGet("ObtenerContrato")]
-        public async Task<ActionResult> GetContrato()
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetContrato(int id)
         {
             try
             {
                 var usuario = User.Identity.Name;
-                var fecha_actual = DateTime.Now;
-
-                var con = await contexto.Contratos
-                                .Include(x => x.Inquilino)
-                                .Include(x => x.Inmueble)
-                                .Where(x => x.Inmueble.Prop.Mail == usuario && x.FecInicio <= fecha_actual && x.FecFin >= fecha_actual)
-                                .ToListAsync();
-                return Ok(con);
+                var contrato = await contexto.Contratos.Include(x => x.Inquilino)
+                                    .Include(x => x.Inmueble)
+                                    .Where(x => x.Inmueble.Prop.Mail == usuario)
+                                    .SingleOrDefaultAsync(x => x.Id == id);
+                return contrato != null ? Ok(contrato) : NotFound();
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message.ToString());
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetListaContratos()
+        {
+            try
+            {
+                var usuario = User.Identity.Name;
+                var lista = await contexto.Contratos
+                                .Include(x => x.Inquilino)
+                                .Include(x => x.Inmueble)
+                               // .Include(x=> x.Garante)
+                                .Where(x => x.Inmueble.Prop.Mail == usuario).ToListAsync();
+                return Ok(lista);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
             }
         }
     }

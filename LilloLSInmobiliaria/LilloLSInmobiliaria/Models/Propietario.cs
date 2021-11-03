@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,6 +31,11 @@ namespace LilloLSInmobiliaria.Models
 
         [Required, DataType(DataType.Password)]
         public String ClaveProp { get; set; }
+
+        public String Avatar { get; set; }
+
+        [NotMapped]
+        public IFormFile AvatarFile { get; set; }
 
         public override string ToString()
         {

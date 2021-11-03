@@ -41,6 +41,7 @@ namespace LilloLSInmobiliaria.Models
 
         [NotMapped]
         public IFormFile AvatarFile { get; set; }
+
         [DisplayName("Rol")]
         public string RolNombre => Rol > 0 ? ((enRoles)Rol).ToString() : "";
 

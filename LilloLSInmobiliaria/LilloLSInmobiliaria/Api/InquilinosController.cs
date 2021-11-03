@@ -64,12 +64,14 @@ namespace LilloLSInmobiliaria.Api
                 var usuario = User.Identity.Name;
                 var fecha_actual = DateTime.Now;
 
-                var query = from inmu in contexto.Inmuebles
-                            join cont in contexto.Contratos
-                              on inmu.Id equals cont.InmuebleId
-                            where cont.FecInicio <= fecha_actual && cont.FecFin >= fecha_actual && usuario == inmu.Prop.Mail
-                            select cont;
-                return Ok(query);
+                var consulta = 
+                               from inmu in contexto.Inmuebles
+                               join cont in contexto.Contratos
+                               on inmu.Id equals cont.InmuebleId
+                               where cont.FecInicio <= fecha_actual && cont.FecFin >= fecha_actual && usuario == inmu.Prop.Mail
+                               select cont;
+
+                return Ok(consulta); 
             }
             catch (Exception ex)
             {

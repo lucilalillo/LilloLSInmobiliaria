@@ -40,40 +40,46 @@
             <th>
                 @Html.DisplayNameFor(model => model.Estado)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Imagen)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @(item.Prop.Nombre+" "+item.Prop.Apellido)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Direccion)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CantAmbientes)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Uso)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Tipo)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Precio)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Estado)
-                </td>
-                <td>
-                    @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
-                    @Html.ActionLink("Detalles", "Details", new { id = item.Id }) |
-                    @Html.ActionLink("Eliminar", "Delete", new { id = item.Id })
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @(item.Prop.Nombre+" "+item.Prop.Apellido)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Direccion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CantAmbientes)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Uso)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tipo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Precio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Estado)
+            </td>
+            <td>
+                <img width="32" src="@item.Imagen">
+            </td>
+            <td>
+                @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Detalles", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Eliminar", "Delete", new { id = item.Id })
+            </td>
+        </tr>
         }
     </tbody>
 </table>

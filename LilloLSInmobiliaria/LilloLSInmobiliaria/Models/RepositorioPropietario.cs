@@ -20,8 +20,8 @@ namespace LilloLSInmobiliaria.Models
             int res = -1;
             using (SqlConnection conn = new SqlConnection(connectionString)) {
 
-				string sql = $"INSERT INTO propietarios (Nombre, Apellido, Dni, Telefono, Mail, ClaveProp) " +
-					$"VALUES (@nombre, @apellido, @dni, @telefono, @mail, @claveprop);" +
+				string sql = $"INSERT INTO propietarios (Nombre, Apellido, Dni, Telefono, Mail, ClaveProp, Avatar) " +
+					$"VALUES (@nombre, @apellido, @dni, @telefono, @mail, @claveprop, @avatar);" +
 					$"SELECT SCOPE_IDENTITY();";
 
 				using (SqlCommand command = new SqlCommand(sql, conn)) { 
@@ -32,6 +32,14 @@ namespace LilloLSInmobiliaria.Models
 					command.Parameters.AddWithValue("@telefono", p.Telefono);
 					command.Parameters.AddWithValue("@mail", p.Mail);
 					command.Parameters.AddWithValue("@claveprop", p.ClaveProp);
+					if (String.IsNullOrEmpty(p.Avatar))
+					{
+						command.Parameters.AddWithValue("@avatar", DBNull.Value);
+					}
+					else
+					{
+						command.Parameters.AddWithValue("@avatar", p.Avatar);
+					}
 					conn.Open();
 					res = Convert.ToInt32(command.ExecuteScalar());
 					p.Id = res;
@@ -64,8 +72,8 @@ namespace LilloLSInmobiliaria.Models
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
 				string sql = $"UPDATE propietarios SET " +
-					$"Nombre=@nombre, Apellido=@apellido, Dni=@dni, Telefono=@telefono, Mail=@mail " +
-					$"WHERE Id = @id";
+					$"Nombre=@nombre, Apellido=@apellido, Dni=@dni, Telefono=@telefono, "+
+						$"Mail=@mail, Avatar=@avatar WHERE Id = @id";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
 					command.CommandType = CommandType.Text;
@@ -74,6 +82,7 @@ namespace LilloLSInmobiliaria.Models
 					command.Parameters.AddWithValue("@dni", p.Dni);
 					command.Parameters.AddWithValue("@telefono", p.Telefono);
 					command.Parameters.AddWithValue("@mail", p.Mail);
+					command.Parameters.AddWithValue("@avatar", p.Avatar);
 					command.Parameters.AddWithValue("@id", p.Id);
 					connection.Open();
 					res = command.ExecuteNonQuery();
@@ -88,7 +97,7 @@ namespace LilloLSInmobiliaria.Models
 			IList<Propietario> res = new List<Propietario>();
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"SELECT Id, Nombre, Apellido, Dni, Telefono, Mail" +
+				string sql = $"SELECT Id, Nombre, Apellido, Dni, Telefono, Mail, Avatar" +
 					$" FROM propietarios" +
 					$" ORDER BY Apellido, Nombre";/* +
 					$" OFFSET 0 ROWS " +
@@ -108,6 +117,7 @@ namespace LilloLSInmobiliaria.Models
 							Dni = (string)reader[nameof(Propietario.Dni)],
 							Telefono = (string)reader[nameof(Propietario.Telefono)],
 							Mail = (string)reader[nameof(Propietario.Mail)],
+							Avatar = reader["Avatar"].ToString(),
 						};
 						res.Add(p);
 					}
@@ -122,7 +132,7 @@ namespace LilloLSInmobiliaria.Models
 			Propietario p = null;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"SELECT Id, Nombre, Apellido, Dni, Telefono, Mail FROM propietarios" +
+				string sql = $"SELECT Id, Nombre, Apellido, Dni, Telefono, Mail, Avatar FROM propietarios" +
 					$" WHERE Id=@id";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
@@ -140,6 +150,7 @@ namespace LilloLSInmobiliaria.Models
 							Dni = (string)reader[nameof(Propietario.Dni)],
 							Telefono = (string)reader[nameof(Propietario.Telefono)],
 							Mail = (string)reader[nameof(Propietario.Mail)],
+							Avatar = reader["Avatar"].ToString(),
 						};
 						return p;
 					}
@@ -154,7 +165,7 @@ namespace LilloLSInmobiliaria.Models
 			Propietario p = null;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"SELECT Id, Nombre, Apellido, Dni, Telefono, Mail, ClaveProp FROM propietarios" +
+				string sql = $"SELECT Id, Nombre, Apellido, Dni, Telefono, Mail, ClaveProp, Avatar FROM propietarios" +
 					$" WHERE Mail=@mail";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
@@ -173,7 +184,7 @@ namespace LilloLSInmobiliaria.Models
 							Telefono = reader.GetString(4),
 							Mail = reader.GetString(5),
 							ClaveProp = reader.GetString(6),
-
+							Avatar = reader["Avatar"].ToString(),
 
 						};
 					}
@@ -189,7 +200,7 @@ namespace LilloLSInmobiliaria.Models
 			Propietario p = null;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"SELECT Id, Nombre, Apellido, Dni, Telefono, Mail, ClaveProp FROM propietarios" +
+				string sql = $"SELECT Id, Nombre, Apellido, Dni, Telefono, Mail, ClaveProp, Avatar FROM propietarios" +
 					$" WHERE Nombre LIKE %@nombre% OR Apellido LIKE %@nombre";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
@@ -208,6 +219,7 @@ namespace LilloLSInmobiliaria.Models
 							Telefono = reader.GetString(4),
 							Mail = reader.GetString(5),
 							ClaveProp = reader.GetString(6),
+							Avatar = reader["Avatar"].ToString(),
 						};
 						res.Add(p);
 					}

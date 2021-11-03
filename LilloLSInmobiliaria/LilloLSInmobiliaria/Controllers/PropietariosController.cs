@@ -1,12 +1,14 @@
 ﻿using LilloLSInmobiliaria.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.SqlServer.Management.Dmf;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,6 +18,7 @@ namespace LilloLSInmobiliaria.Controllers
     {
         private readonly IRepositorioPropietario repo;
         private readonly IRepositorioInmueble repoInmu;
+        private readonly IWebHostEnvironment environment;
         private readonly IConfiguration config;
 
 
@@ -63,7 +66,7 @@ namespace LilloLSInmobiliaria.Controllers
         // POST: PropietariosController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-       
+
         public ActionResult Create(Propietario p)
         {
             try
@@ -78,12 +81,29 @@ namespace LilloLSInmobiliaria.Controllers
                         numBytesRequested: 256 / 8));
                     p.ClaveProp = hashed;
                     repo.Alta(p);
+                    if (p.AvatarFile != null && p.Id > 0)
+                    {
+                        string wwwPath = environment.WebRootPath;
+                        string path = Path.Combine(wwwPath, "Uploads");
+                        if (!Directory.Exists(path))
+                        {
+                            Directory.CreateDirectory(path);
+                        }
+                        //Path.GetFileName(u.AvatarFile.FileName);//este nombre se puede repetir
+                        string fileName = "avatar_" + p.Id + Path.GetExtension(p.AvatarFile.FileName);
+                        string pathCompleto = Path.Combine(path, fileName);
+                        p.Avatar = Path.Combine("/Uploads", fileName);
+                        // Esta operación guarda la foto en memoria en el ruta que necesitamos
+                        using (FileStream stream = new FileStream(pathCompleto, FileMode.Create))
+                        {
+                            p.AvatarFile.CopyTo(stream);
+                        }
+                        repo.Modificacion(p);
+                    }
                     TempData["Id"] = p.Id;
-                    return RedirectToAction(nameof(Index));
-                }
-                else
                     return View(p);
-
+                 }
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
@@ -120,6 +140,7 @@ namespace LilloLSInmobiliaria.Controllers
                 p.Dni = collection["Dni"];
                 p.Mail = collection["Mail"];
                 p.Telefono = collection["Telefono"];
+                p.Avatar = collection["Avatar"];
                 repo.Modificacion(p);
                 TempData["Mensaje"] = "Datos guardados correctamente";
                 return RedirectToAction(nameof(Index));

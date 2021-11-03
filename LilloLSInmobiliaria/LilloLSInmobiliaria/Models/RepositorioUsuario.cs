@@ -70,7 +70,8 @@ namespace LilloLSInmobiliaria.Models
 			int res = -1;
 			using (SqlConnection connection = new SqlConnection(connectionString))
 			{
-				string sql = $"UPDATE usuarios SET Nombre=@nombre, Apellido=@apellido, Email=@email, Rol=@rol, Clave=@clave WHERE Id = @id";
+				string sql = $"UPDATE usuarios SET Nombre=@nombre, Apellido=@apellido, Email=@email, "+
+					$"Rol=@rol, Clave=@clave, Avatar=@avatar WHERE Id = @id";
 				using (SqlCommand command = new SqlCommand(sql, connection))
 				{
 					command.CommandType = CommandType.Text;

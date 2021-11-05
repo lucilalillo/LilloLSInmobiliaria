@@ -34,9 +34,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Mail)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Avatar)
-            </th>
+            
             <th></th>
         </tr>
     </thead>
@@ -59,9 +57,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Mail)
             </td>
-            <td>
-                <img width="32" src="@item.Avatar">
-            </td>
+            
             <td>
                 @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
                 @Html.ActionLink("Detalles", "Details", new { id = item.Id })|

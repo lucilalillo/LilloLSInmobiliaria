@@ -32,11 +32,6 @@ namespace LilloLSInmobiliaria.Models
         [Required, DataType(DataType.Password)]
         public String ClaveProp { get; set; }
 
-        public String Avatar { get; set; }
-
-        [NotMapped]
-        public IFormFile AvatarFile { get; set; }
-
         public override string ToString()
         {
             return $"{Id} {Nombre} {Apellido} {Dni} {Telefono} {Mail}";

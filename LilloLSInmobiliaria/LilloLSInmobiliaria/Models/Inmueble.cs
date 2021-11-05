@@ -37,10 +37,10 @@ namespace LilloLSInmobiliaria.Models
 
         public bool Estado { get; set; }
 
-        public String Imagen { get; set; }
+        /*public String Imagen { get; set; }
 
         [NotMapped]
-        public  IFormFile ImagenFile { get; set; }
+        public  IFormFile ImagenFile { get; set; }*/
 
     }
 }

@@ -30,7 +30,8 @@ namespace LilloLSInmobiliaria.Api
             try
             {
                 var usuario = User.Identity.Name;
-                var contrato = await contexto.Contratos.Include(x => x.Inquilino)
+                var contrato = await contexto.Contratos
+                                    .Include(x => x.Inquilino)
                                     .Include(x => x.Inmueble)
                                     .Where(x => x.Inmueble.Prop.Mail == usuario)
                                     .SingleOrDefaultAsync(x => x.Id == id);

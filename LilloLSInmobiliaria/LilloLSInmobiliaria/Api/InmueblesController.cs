@@ -114,8 +114,8 @@ namespace LilloLSInmobiliaria.Api
 
         // POST api/<controller>
         //este metodo envia la foto del inmueble
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Inmueble entidad)
+       /* [HttpPost]
+       public async Task<IActionResult> Post([FromBody] Inmueble entidad)
         {
             try
             {
@@ -160,6 +160,6 @@ namespace LilloLSInmobiliaria.Api
             {
                 return BadRequest(ex.Message.ToString());
             }
-        }
+        }*/
     }
 }

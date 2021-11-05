@@ -81,7 +81,7 @@ namespace LilloLSInmobiliaria.Controllers
                         numBytesRequested: 256 / 8));
                     p.ClaveProp = hashed;
                     repo.Alta(p);
-                    if (p.AvatarFile != null && p.Id > 0)
+                    /*if (p.AvatarFile != null && p.Id > 0)
                     {
                         string wwwPath = environment.WebRootPath;
                         string path = Path.Combine(wwwPath, "Uploads");
@@ -98,9 +98,10 @@ namespace LilloLSInmobiliaria.Controllers
                         {
                             p.AvatarFile.CopyTo(stream);
                         }
-                        repo.Modificacion(p);
-                    }
-                    TempData["Id"] = p.Id;
+                        
+                    }*/
+                   repo.Modificacion(p);
+                   TempData["Id"] = p.Id;
                     return View(p);
                  }
                 return RedirectToAction(nameof(Index));
@@ -140,7 +141,7 @@ namespace LilloLSInmobiliaria.Controllers
                 p.Dni = collection["Dni"];
                 p.Mail = collection["Mail"];
                 p.Telefono = collection["Telefono"];
-                p.Avatar = collection["Avatar"];
+                //p.Avatar = collection["Avatar"];
                 repo.Modificacion(p);
                 TempData["Mensaje"] = "Datos guardados correctamente";
                 return RedirectToAction(nameof(Index));
